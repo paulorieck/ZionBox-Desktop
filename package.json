@@ -17,5 +17,8 @@
     "node-notifier": "^5.4.0",
     "os-locale": "^4.0.0",
     "try-to-catch": "^1.1.1"
+  },
+  "bin": {
+    "zionboxdesktop": "./bin/startup.js"
   }
 }
