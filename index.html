@@ -1,0 +1,1254 @@
+<html>
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>IPFVault</title>
+        
+        <!-- Custom fonts for this template-->
+        <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+        <!-- Custom styles for this template-->
+        <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+        <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="vex/css/vex.css" />
+        <link rel="stylesheet" href="vex/css/vex-theme-os.css" />
+
+        <link rel="stylesheet" href="contextMenu/contextMenu.min.css">
+
+    </head>
+
+    <body id="page-top">
+
+        <!-- Page Wrapper -->
+        <div id="wrapper">
+
+            <!-- Sidebar -->
+            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+                <!-- Sidebar - Brand -->
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+                    <div class="sidebar-brand-icon rotate-n-15">
+                        <i class="fas fa-laugh-wink"></i>
+                    </div>
+                    <div class="sidebar-brand-text mx-3">IPFVault</div>
+                </a>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+
+                <!-- Nav Item - Dashboard -->
+                <li class="nav-item active">
+                    <a class="nav-link" id="indexBt">
+                        <i class="fas fa-fw fa-network-wired"></i>
+                        <span>Files</span>
+                    </a>
+                </li>
+
+                <hr class="sidebar-divider my-0">
+
+                <!-- Nav Item - Dashboard -->
+                <li class="nav-item active">
+                    <a class="nav-link" id="syncBt">
+                        <i class="fas fa-fw fa-sync"></i>
+                        <span>Synchronization</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+
+                <!-- Nav Item - Dashboard -->
+                <li class="nav-item active">
+                    <a class="nav-link" id="configBt">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+
+                <hr class="sidebar-divider my-0">
+
+                <li class="nav-item active">
+                    <a class="nav-link" id="swarmsBt">
+                        <i class="fas fa-fw fa-project-diagram"></i>
+                        <span>Additional Swarms</span>
+                    </a>
+                </li>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+
+                <!-- Nav Item - Dashboard -->
+                <li class="nav-item active">
+                    <a class="nav-link" id="aboutBt">
+                        <i class="fas fa-fw fa-question"></i>
+                        <span>About</span>
+                    </a>
+                </li>
+
+            </ul>
+            <!-- End of Sidebar -->
+
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+
+                <div id="indexDiv">
+                    <div class="container-fluid">
+                        <h4 style="padding-top: 10px;">Files</h4>
+                        <hr>
+                        <div style='font-size: 45px;'>
+                            <span id="back_btn" title="Go to Previous">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span id="next_btn" title="Go to Next">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                            <span id="go_to_root_btn" title="Root Directory" style='font-weight: 1000;'>/</span>
+                            <span id="import_local_folder_btn" title="Import Directory">
+                                <i class="fas fa-folder-plus"></i>
+                            </span>
+                            <span id="create_root_btn" title="Create New Root Directory">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                            <span id="import_root_btn" title="Import Root Directory">
+                                <i class="fas fa-cloud-download-alt"></i>
+                            </span>
+                        </div>
+                        <hr>
+                        <div style='font-size: 24px;'>
+                            <span>Path: </span><span id='path_string'></span>
+                        </div>
+                        <hr>
+                        <div id="filesDiv" class="col-lg-12 col-md-12 col-sm-12 context-menu-folder" style="width: 100%; min-height: 250px; border-style: dashed; padding-bottom: 15px;"></div>
+                    </div>
+                </div>
+
+                <div id="configsDiv">
+                    <div class="container-fluid">
+                        <h4 style="padding-top: 10px;">Settings</h4>
+                        <hr>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <form>
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-md-4 col-sm-4">Server Address (url:port)</label>
+                                    <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <input id="configsInput_ServerAddress" class="form-control"/>
+                                    </div>                                
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-md-4 col-sm-4">Local API Address: </label>
+                                    <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <input id="configsInput_LocalAPIAddress" class="form-control"/>
+                                    </div>                                
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-md-4 col-sm-4">Mirror Address: </label>
+                                    <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <input id="configsInput_MirrorAddress" class="form-control"/>
+                                    </div>                                
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-md-4 col-sm-4">Mirror Swarm Address: </label>
+                                    <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <input id="configsInput_MirrorSwarmAddress" class="form-control"/>
+                                    </div>                                
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-4 col-md-4 col-sm-4">Relay Swarm Address: </label>
+                                    <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <input id="configsInput_RelaySwarmAddress" class="form-control"/>
+                                    </div>                                
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="swarmsDiv">
+                    <div class="container-fluid">
+                        <h4 style="padding-top: 10px;">Additional Swarms List</h4>
+                        <hr>
+                        <div style='font-size: 45px;'>
+                            <span id="swarm_add_btn" title="Add New Pair">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                        </div>
+                        <hr>
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div id="swarmTableContent" class='table-responsive'></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="aboutDiv">
+                    <div class="container-fluid">
+                        <h4 style="padding-top: 10px;">About</h4>
+                    </div>
+                </div>
+            
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; GWTK Software 2019</span>
+                    </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
+
+            </div>
+            <!-- End of Page Wrapper -->
+            
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+
+        </div>
+
+        <!-- Insert this line above script imports  -->
+        <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
+
+        <script src="js/notify.min.js"></script>
+
+        <!-- Page level plugins -->
+        <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+        <script src="contextMenu/contextMenu.min.js"></script>
+        <script src="contextMenu/ui.position.js"></script>
+
+        <script src="vex/js/vex.combined.min.js"></script>
+        <script>vex.defaultOptions.className = 'vex-theme-os'</script>
+
+        <script src="js/require.min.js"></script>
+
+        <script>
+        
+            const {ipcRenderer, remote} = require('electron');
+            const fileExtension = require('file-extension');
+
+            var metadata;
+            var gateway;
+
+            var navigation_history = ['root'];
+            var history_position = 0;
+            var importation_start_time = 0;
+
+            var selected_metadata_hash = "root";
+
+            function hsDivs(div2show) {
+
+                var divs = ["#indexDiv", "#configsDiv", "#infoDiv", "#aboutDiv", "#swarmsDiv"];
+
+                for (var i = 0; i < divs.length; i++) {
+                    if ( divs[i] !== div2show ) {
+                        $(divs[i]).hide("fast");
+                    } else {
+                        $(divs[i]).show("fast");
+                    }
+                }
+
+            }
+
+            function searchObjectOnMetadataStructure(metadata_, metadata_hash) {
+
+                var metadata_temp = null;
+                for (var i = 0; i < metadata_.length; i++) {
+
+                    if ( metadata_[i].metadata_hash === metadata_hash ) {
+                        metadata_temp = metadata_[i];
+                    } else {
+                        var versions = metadata_[i].versions;
+                        for (var j = 0; j < versions.length; j++) {
+                            if ( versions[j].metadata_hash === metadata_hash ) {
+                                metadata_temp = metadata_[i];
+                                break;
+                            }
+                        }
+                    }
+
+                    if ( metadata_temp === null || typeof metadata_temp === "undefined" ) {
+
+                        var processed_child = metadata_[i].processed_child;
+
+                        if ( processed_child.length > 0 ) {
+
+                            metadata_temp = searchObjectOnMetadataStructure(processed_child, metadata_hash);
+
+                            if ( metadata_temp !== null && typeof metadata_temp !== "undefined" ) {
+                                return metadata_temp;
+                            }
+
+                        } else if ( metadata_temp !== null && typeof metadata_temp !== "undefined" ) {
+                            return metadata_temp;
+                        }
+
+                    } else {
+                        return metadata_temp;
+                    }
+
+                }
+
+            }
+
+            function loadFiles(metadata_) {
+
+                metadata = JSON.parse(metadata_);
+
+                console.log("metadata:");
+                console.log(metadata);
+
+                // Updates the navigation history for the last hashes
+                for (var i = 0; i < navigation_history.length; i++) {
+                    if ( navigation_history[i] !== "root" ) {
+                        var selected_metadata_obj = searchObjectOnMetadataStructure(metadata, navigation_history[i]);
+                        if ( navigation_history[i] !== selected_metadata_obj.metadata_hash ) {
+                            navigation_history[i] = selected_metadata_obj.metadata_hash;
+                        }
+                    }
+                }
+
+                var child;
+
+                if ( selected_metadata_hash !== "root" ) {
+                    var selected_metadata_obj = searchObjectOnMetadataStructure(metadata, selected_metadata_hash);
+                    if ( typeof selected_metadata_obj.metadata_hash !== "undefined" && selected_metadata_obj.metadata_hash !== selected_metadata_hash ) {
+                        selected_metadata_hash = selected_metadata_obj.metadata_hash;
+                    }
+                    child = selected_metadata_obj.processed_child;
+                } else {
+                    child = metadata;
+                }
+                //console.log("selected_metadata_hash: "+selected_metadata_hash);
+
+                processFileExplorer(selected_metadata_hash, child);
+
+                processBackAndForwardButtons();
+
+            }
+
+            function getPathStr(metadata_hash, folder_path) {
+
+                var object_metadata = searchObjectOnMetadataStructure(metadata, metadata_hash);
+
+                folder_path = "/"+object_metadata.name+folder_path;
+
+                if ( typeof object_metadata.parent !== "undefined" ) {
+                    folder_path = getPathStr(object_metadata.parent, folder_path)
+                }
+                
+                return folder_path;
+
+            }
+
+            function createImportationNotification(root_name, perc) {
+
+                var id = "#"+root_name.replace(/\s/g, '');
+
+                importation_start_time = (new Date()).getTime();
+
+                content = "<div id='"+root_name.replace(/\s/g, '')+"' class='toast' data-autohide='false' role='alert' aria-live='assertive' aria-atomic='true' style='position: fixed; right: 20px; bottom: 30px;'>"+
+                            "<div class='toast-header' style='background-color: #385075;'>"+
+                                //"<img src='...' class='rounded mr-2' alt='...'>"+
+                                "<strong class='mr-auto'>Importing Structure</strong>"+
+                                //"<small class='text-muted'>11 mins ago</small>"+
+                                "<button type='button' class='ml-2 mb-1 close' data-dismiss='toast' aria-label='Close'>"+
+                                "<span aria-hidden='true'>&times;</span>"+
+                                "</button>"+
+                            "</div>"+
+                            "<div class='toast-body'>"+
+                                "Uploading '"+root_name+"'.<br>"+
+                                "Progress: <span id='notification_perc'>"+perc+"</span> %.<br>"+
+                                "Estimated remaining time: <span id='notification_remaining_time'>0</span>"+
+                            "</div>"+
+                        "</div>";
+
+                $("body").append(content);
+                
+                $(id).toast('show');
+
+            }
+
+            function humanTime(millitime) {
+
+                var days = Math.floor(millitime/(24*60*60*1000));
+                var rest = millitime-(days*24*60*60*1000);
+
+                var hours = Math.floor(rest/(60*60*1000));
+                rest = rest-(hours*60*60*1000);
+
+                var minutes = Math.floor(rest/(60*1000));
+                rest = rest-(minutes*60*1000);
+
+                var seconds = Math.floor(rest/(1000));
+                rest = rest-(seconds*1000);
+
+                if ( hours.length === 0 ) {
+                    hours = "0"+hours;
+                }
+
+                if ( minutes.length === 0 ) {
+                    minutes = "0"+minutes;
+                }
+
+                if ( seconds.length === 0 ) {
+                    seconds = "0"+seconds;
+                }
+
+                var retStr = "";
+                if ( days > 0 ) {
+                    retStr = retStr+days+" day(s) ";
+                } 
+                
+                if ( hours > 0  ) {
+                    retStr = retStr+hours+"h ";
+                } 
+                
+                if ( minutes > 0  ) {
+                    retStr = retStr+minutes+"m ";
+                } 
+                
+                if ( seconds > 0  ) {
+                    retStr = retStr+seconds+"s";
+                }
+
+                return retStr;
+
+            }
+
+            function updateImportationNotification(root_name, perc) {
+
+                var id = "#"+root_name.replace(/\s/g, '');
+            
+                var now = (new Date()).getTime();
+                var partialtime = (now - importation_start_time);
+
+                var fulltime_millis = (100*partialtime/perc)-partialtime;
+                var fulltime_str = humanTime(fulltime_millis);
+
+                perc = Math.round(100*perc)/100;
+
+                $("#notification_perc").html(perc);
+                $("#notification_remaining_time").html(fulltime_str);
+
+                $(id).toast('show');
+
+            }
+
+            function notifyImportationConcluded(root_name, perc) {
+
+                var id = "#"+root_name.replace(/\s/g, '');
+
+                $(id).remove();
+
+            }
+
+            function showSharePassword(passphrase) {
+
+                // Inform about the password
+                vex.dialog.open({
+                    message: 'Compartilhamento',
+                    input: [
+                        '<style>',
+                            '.vex-custom-field-wrapper {',
+                                'margin: 1em 0;',
+                            '}',
+                            '.vex-custom-field-wrapper > label {',
+                                'display: inline-block;',
+                                'margin-bottom: .2em;',
+                            '}',
+                        '</style>',
+                        '<div class="vex-custom-field-wrapper">',
+                            "Por favor, informe a seguinte senha para o destinatário deste compartilhamento.<br><br>",
+                            "<b>"+passphrase+"</b><br><br>",
+                            "Esta senha deverá ser enviada por meio seguro, sob pena de comprometer a privacidade dos dados.",
+                        '</div>'
+                    ].join(''),
+                    callback: function (data) {
+                        
+                    }
+                });
+
+            }
+
+            function returnGetGateway(gateway_) {
+                gateway = gateway_;
+                console.log(gateway);
+            }
+
+            function checkCredentials() {
+
+                vex.dialog.open({
+                    message: 'Login',
+                    input: [
+                        '<style>',
+                            '.vex-custom-field-wrapper {',
+                                'margin: 1em 0;',
+                            '}',
+                            '.vex-custom-field-wrapper > label {',
+                                'display: inline-block;',
+                                'margin-bottom: .2em;',
+                            '}',
+                        '</style>',
+                        '<div class="vex-custom-field-wrapper">',
+                            '<label for="username">Username</label>',
+                            '<div class="vex-custom-input-wrapper">',
+                                '<input name="username" type="text" placeholder="Username" required />'+
+                            '</div>',
+                        '</div>',
+                        '<div class="vex-custom-field-wrapper">',
+                            '<label for="password">Password:</label>',
+                            '<div class="vex-custom-input-wrapper">',
+                                '<input name="password" type="password" placeholder="Password" required />',
+                            '</div>',
+                        '</div>'
+                    ].join(''),
+                    callback: function (data) {
+                        if (!data) {
+                            return console.log('Cancelled')
+                        } else {
+                            ipcRenderer.send("checkCredentials", JSON.stringify(data));           
+                        }
+                    }
+                });
+
+            }
+
+            function processFileExplorer(metadata_hash, metadata_) {
+
+                selected_metadata_hash = metadata_hash;
+
+                console.log("metadata_hash: "+metadata_hash);
+
+                metadata_.sort(function(a, b){
+                    if(a.name < b.name) { return -1; }
+                    if(a.name > b.name) { return 1; }
+                    return 0;
+                })
+
+                var folder_path = "/";
+                if ( metadata_hash !== 'root' ) {
+                    folder_path = getPathStr(metadata_hash, folder_path);
+                }
+
+                $("#path_string").html(folder_path);
+
+                $("#filesDiv").empty();
+                $("#filesDiv").attr("metadata_hash", metadata_hash);
+
+                for (var i = 0; i < metadata_.length; i++) {
+
+                    if ( metadata_[i].type === 'folder' ) {
+
+                        var context_class = "";
+                        if ( metadata_[i].subtype === 'root' ) {
+                            context_class = 'context-menu-root';
+                        } else if ( metadata_[i].subtype === 'subdirectory' ) {
+                            context_class = 'context-menu-folder';
+                        }
+
+                        $("#filesDiv").append(
+                            "<div metadata_hash='"+metadata_[i].metadata_hash+"' class='col-lg-3 col-md-4 col-sm-6 folder "+context_class+"' style='text-align: center; cursor: pointer; display: inline-block; padding-top: 20px; vertical-align: top;'>"+
+                                "<div><i class='far fa-folder' style='font-size: 100px; color: #313c79;'></i></div>"+
+                                "<div style='overflow-wrap: break-word; padding-top: 10px;'><span>"+metadata_[i].name+"</span></div>"+
+                            "</div>"
+                        );
+
+                    } else if ( metadata_[i].type === 'file' ) {
+
+                        var file_extension = fileExtension(metadata_[i].name);
+                        var icon = "";
+                        if ( file_extension === "xlsx" || file_extension === "xls" ) {
+                            icon = "fa-file-excel";
+                            color = "color: #1c4c1c;";
+                        } else if ( file_extension === "zip" || file_extension === "rar" || file_extension === "tar" ) {
+                            icon = "fa-file-archive";
+                            color = "color: #ffa900;";
+                        } else if ( file_extension === "pdf" ) {
+                            icon = "fa-file-pdf";
+                            color = "color: #b10202;";
+                        } else if ( file_extension === "docx" || file_extension === "doc" ) {
+                            icon = "fa-file-word";
+                            color = "color: #00104e;";
+                        } else if ( file_extension === "msg" ) {
+                            icon = "fa-envelope";
+                            color = "color: #5680b7;";
+                        } else if ( file_extension === "mp4" || file_extension === "mpeg" || file_extension === "avi" || file_extension === "ogv" || file_extension === "webm" ) {
+                            icon = "fa-file-video";
+                            color = "color: #B7569F;";
+                        } else if ( file_extension === "mp3" || file_extension === "wav" || file_extension === "ogg" || file_extension === "opus" ) {
+                            icon = "fa-file-audio";
+                            color = "color: #B7569F;";
+                        } else {
+                            icon = "fa-file";
+                            color = "";
+                        }
+
+                        var lockStr = "";
+                        if ( metadata_[i].encrypted ) {
+                            lockStr = "<i class='fas fa-lock'></i>&nbsp;";
+                        } else {
+                            lockStr = "<i class='fas fa-unlock'></i>&nbsp;";
+                        }
+
+                        var synchroStr = "";
+                        if ( metadata_[i].to_synchronize ) {
+                            if ( metadata_[i].synchronized ) {
+                                synchroStr = "<i class='fas fa-sync' style='color: green;'></i>&nbsp;";
+                            } else {
+                                synchroStr = "<i class='fas fa-sync'></i>&nbsp;";
+                            }
+                        } else {
+                            if ( metadata_[i].synchronized ) {
+                                synchroStr = "<i class='fas fa-sync' style='color: green;'></i>&nbsp;";
+                            }
+                        }
+
+                        $("#filesDiv").append(
+                            "<div metadata_hash='"+metadata_[i].metadata_hash+"' class='col-lg-3 col-md-4 col-sm-6 file context-menu-file' style='text-align: center; cursor: pointer; display: inline-block; padding-top: 20px; vertical-align: top;'>"+
+                                "<div><i class='far "+icon+"' style='font-size: 100px; "+color+"'></i></div>"+
+                                "<div style='overflow-wrap: break-word; padding-top: 10px;'><span>"+metadata_[i].name+"</span> "+lockStr+""+synchroStr+"</div>"+
+                            "</div>"    
+                        );
+
+                    }
+
+                }
+
+                $("#filesDiv").off('dragover', null);
+                $("#filesDiv").on(
+                    'dragover',
+                    function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                );
+
+                $("#filesDiv").off('dragenter', null);
+                $("#filesDiv").on(
+                    'dragenter',
+                    function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                );
+
+                if ( metadata_hash === "root" ) {
+
+                    $("#filesDiv").off('drop', null);
+
+                    $("#go_to_root_btn").css('color', '');
+                    $("#go_to_root_btn").css('cursor', '');
+
+                    // Enable buttons
+                    $("#import_local_folder_btn").css('color', '#222a6f');
+                    $("#import_local_folder_btn").css('cursor', 'pointer');
+
+                    $("#create_root_btn").css('color', '#222a6f');
+                    $("#create_root_btn").css('cursor', 'pointer');
+
+                    $("#import_root_btn").css('color', '#222a6f');
+                    $("#import_root_btn").css('cursor', 'pointer');
+
+                    $("#import_local_folder_btn").off('click', null);
+                    $("#import_local_folder_btn").on('click', function () {
+                        ipcRenderer.send("importLocalFolder", null);
+                    });
+
+                    $("#create_root_btn").off('click', null);
+                    $("#create_root_btn").on('click', function () {
+
+                        vex.dialog.open({
+                            message: 'Enter the new directory name:',
+                            input: [
+                                '<input name="name" type="text" placeholder="Directory Name" required />'
+                            ].join(''),
+                            buttons: [
+                                $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                                $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                            ],
+                            callback: function (data) {
+                                if (!data) {
+                                    console.log('Cancelled')
+                                } else {
+                                    ipcRenderer.send("createRootDirectory", data.name);
+                                }
+                            }
+                        });
+
+                    });
+
+                    $("#import_root_btn").off('click', null);
+                    $("#import_root_btn").on('click', function () {
+
+                        vex.dialog.open({
+                            //message: 'Select the IPS file to import.',
+                            input: [
+                                '<style>',
+                                    '.vex-custom-field-wrapper {',
+                                        'margin: 1em 0;',
+                                    '}',
+                                    '.vex-custom-field-wrapper > label {',
+                                        'display: inline-block;',
+                                        'margin-bottom: .2em;',
+                                    '}',
+                                '</style>',
+                                '<div class="vex-custom-field-wrapper">',
+                                    '<label for="date">Select an IPFS file to import:</label>',
+                                    '<div class="vex-custom-input-wrapper">',
+                                        '<input type="file" id="import_root_file_input" name="import_root_file_input" />',
+                                    '</div>',
+                                '</div>',
+                                '<div class="vex-custom-field-wrapper">',
+                                    '<label for="date">Type the passphrase to this share:</label>',
+                                    '<div class="vex-custom-input-wrapper">',
+                                        '<input type="password" id="import_root_password_input" name="import_root_password_input" />',
+                                    '</div>',
+                                '</div>'
+                            ].join(''),
+                            buttons: [
+                                $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                                $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                            ],
+                            callback: function (data) {
+                                if (!data) {
+                                    console.log('Cancelled')
+                                } else {
+                                    var file_path = $("#import_root_file_input")[0].files[0].path;
+                                    ipcRenderer.send("importShare", JSON.stringify({"file_path": file_path+"", "passphrase": data.import_root_password_input}));
+                                }
+                            }
+                        });
+
+                    });
+
+                    $('.context-menu-folder').contextMenu(false); // disable contextmenu
+
+                    $.contextMenu({
+                        selector: '.context-menu-root', 
+                        callback: function(key, options) {
+                            
+                            var metadata_hash = $(this).attr("metadata_hash");
+                            if ( key === 'share_root' ) {
+                                console.log("Will share "+metadata_hash);
+                                ipcRenderer.send("shareRoot", metadata_hash);
+                            }
+
+                        },
+                        items: {
+                            "share_root": {name: "Share This Root Folder", icon: "fas fa-share-square"}
+                        }
+                    });
+
+                    $('.context-menu-root').contextMenu(true); // enable contextmenu
+                    
+                } else {
+
+                    $("#go_to_root_btn").css('color', '#222a6f');
+                    $("#go_to_root_btn").css('cursor', 'pointer');
+
+                    // Disable buttons
+                    $("#import_local_folder_btn").css('color', '');
+                    $("#import_local_folder_btn").css('cursor', '');
+
+                    $("#create_root_btn").css('color', '');
+                    $("#create_root_btn").css('cursor', '');
+
+                    $("#import_root_btn").css('color', '');
+                    $("#import_root_btn").css('cursor', '');
+
+                    $("#filesDiv").off('drop', null);
+                    $("#filesDiv").on(
+                        'drop',
+                        function(e){
+
+                            if ( e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files.length ) {
+
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                var files = e.originalEvent.dataTransfer.files;
+
+                                vex.dialog.open({
+                                    message: 'Would you like to encrypt this content?',
+                                    input: [
+                                        '<input type="checkbox" id="encrypt_checkbox" name="encrypt_checkbox" checked>'
+                                    ].join(''),
+                                    buttons: [
+                                        $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                                        $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                                    ],
+                                    callback: function (data) {
+                                        if (!data) {
+                                            console.log('Cancelled')
+                                        } else {
+
+                                            var encrypt = false;
+                                            if ( data.encrypt_checkbox === "on" ) {
+                                                encrypt = true;
+                                            }
+                                            
+                                            for (var i = 0; i < files.length; i++) {
+                                                var path = files[i].path;
+                                                ipcRenderer.send("addFile", JSON.stringify({'path': path, 'metadata_hash': metadata_hash, 'encrypt': encrypt}));
+                                            }
+
+                                        }
+                                    }
+                                });
+
+                            }
+
+                        }
+                    );
+
+                    /////////////////////////////////
+
+                    $.contextMenu({
+                        selector: '.context-menu-folder', 
+                        callback: function(key, options) {
+
+                            var metadata_hash = $(this).attr("metadata_hash");
+                            if ( key === 'addSubfolder' ) {
+
+                                vex.dialog.open({
+                                    message: 'Enter the new directory name:',
+                                    input: [
+                                        '<input name="name" type="text" placeholder="Directory Name" required />'
+                                    ].join(''),
+                                    buttons: [
+                                        $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                                        $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                                    ],
+                                    callback: function (data) {
+                                        if (!data) {
+                                            console.log('Cancelled')
+                                        } else {
+                                            ipcRenderer.send("createSubdirectory", JSON.stringify({'name': data.name, 'metadata_hash': metadata_hash}));
+                                        }
+                                    }
+                                });
+
+                            } else if ( key === 'delete' ) {
+
+                                selected_metadata_hash = searchObjectOnMetadataStructure(metadata, metadata_hash).parent;
+                                console.log("[delete] selected_metadata_hash: "+selected_metadata_hash);
+
+                                console.log("Will remove "+metadata_hash);
+                                ipcRenderer.send("remove", metadata_hash);
+
+                            } else if ( key === 'import_public_hash' ) {
+
+                                vex.dialog.open({
+                                    message: 'Enter the public hash to import:',
+                                    input: [
+                                        '<input name="hash" type="text" placeholder="IPFS Hash" required />',
+                                        '<input name="name" type="text" placeholder="Desired File Name" required />'
+                                    ].join(''),
+                                    buttons: [
+                                        $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                                        $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                                    ],
+                                    callback: function (data) {
+                                        if (!data) {
+                                            console.log('Cancelled')
+                                        } else {
+                                            ipcRenderer.send("importPublicHash", JSON.stringify({'hash': data.hash, 'parent_location_hash': selected_metadata_hash, 'name': data.name}));
+                                        }
+                                    }
+                                });
+
+                            }
+
+                        },
+                        items: {
+                            "addSubfolder": {name: "Add Subfolder", icon: "fas fa-folder-plus"},
+                            "edit": {name: "Edit Name", icon: "fas fa-edit"},
+                            "delete": {name: "Delete", icon: "fas fa-minus-square"},
+                            "import_public_hash": {name: "Import Public Object", icon: "fas fa-file-import"},
+                        }
+                    });
+
+                    $.contextMenu({
+                        selector: '.context-menu-file', 
+                        callback: function(key, options) {
+                            
+                            var metadata_hash = $(this).attr("metadata_hash");
+                            if ( key === 'delete' ) {
+
+                                console.log("Will remove "+metadata_hash);
+                                ipcRenderer.send("remove", metadata_hash);
+
+                            }
+
+                        },
+                        items: {
+                            "edit": {name: "Edit Name", icon: "fas fa-edit"},
+                            "delete": {name: "Delete", icon: "fas fa-minus-square"}
+                        }
+                    });
+
+                    $('.context-menu-folder').contextMenu(true); // enable contextmenu
+                    $('.context-menu-root').contextMenu(false);
+
+                }
+
+                $("#go_to_root_btn").off('click', null);
+                $("#go_to_root_btn").on('click', function () {
+
+                    processFileExplorer('root', metadata);
+
+                });
+
+                $(".folder").on('click', function () {
+
+                    var metadata_hash = $(this).attr("metadata_hash");
+                    var object_metadata = searchObjectOnMetadataStructure(metadata, metadata_hash);
+
+                    var children = object_metadata.processed_child;
+                    processFileExplorer(metadata_hash, children);
+
+                    // Removes everything that is behind the current history_position
+                    for (var i = history_position; i < navigation_history.length; i++) {
+                        navigation_history.splice(i+1, 1);
+                    }
+                    navigation_history.push(metadata_hash);
+
+                    history_position++;
+
+                    processBackAndForwardButtons();
+
+                });
+
+                $(".file").on('click', function () {
+
+                    var metadata_hash = $(this).attr("metadata_hash");
+                    var object_metadata = searchObjectOnMetadataStructure(metadata, metadata_hash);
+
+                    if ( object_metadata.name.indexOf(".mp4") !== -1 || object_metadata.name.indexOf(".ogg") !== -1 || object_metadata.name.indexOf(".webm") !== -1 || object_metadata.name.indexOf(".mkv") !== -1 ) {
+
+                        // Video
+                        const BrowserWindow = remote.BrowserWindow;
+                        const win = new BrowserWindow({
+                            height: 600,
+                            width: 800
+                        });
+                        win.setTitle(object_metadata.name);
+
+                        win.loadURL('http://127.0.0.1:8080/ipfs/'+object_metadata.binary_hash);
+
+                    } else if ( object_metadata.name.indexOf(".jpg") !== -1 || object_metadata.name.indexOf(".svg") !== -1 || object_metadata.name.indexOf(".jpeg") !== -1 || object_metadata.name.indexOf(".png") !== -1 || object_metadata.name.indexOf(".gif") !== -1 ) {
+
+                        // Image
+                        const BrowserWindow = remote.BrowserWindow;
+                        const win = new BrowserWindow({
+                            height: 600,
+                            width: 800
+                        });
+                        win.setTitle(object_metadata.name);
+
+                        win.loadURL('http://127.0.0.1:8080/ipfs/'+object_metadata.binary_hash);
+
+                    } else if ( object_metadata.name.indexOf(".mp3") !== -1 || object_metadata.name.indexOf(".ogg") !== -1 || object_metadata.name.indexOf(".wav") !== -1 || object_metadata.name.indexOf(".opus") !== -1 ) {
+
+                        // Image
+                        const BrowserWindow = remote.BrowserWindow;
+                        const win = new BrowserWindow({
+                            height: 600,
+                            width: 800
+                        });
+                        win.setTitle(object_metadata.name);
+
+                        win.loadURL('http://127.0.0.1:8080/ipfs/'+object_metadata.binary_hash);
+
+                    } else {
+
+                        ipcRenderer.send("getBinary", metadata_hash);
+
+                    }
+
+                });
+
+            }
+
+            function processBackAndForwardButtons () {
+
+                if ( history_position > 0 ) {
+                    $("#back_btn").css('color', '#222a6f');
+                    $("#back_btn").css('cursor', 'pointer');
+                } else if ( history_position === 0 ) {
+                    $("#back_btn").css('color', '');
+                    $("#back_btn").css('cursor', '');
+                }
+
+                if ( history_position < navigation_history.length-1 ) {
+                    $("#next_btn").css('color', '#222a6f');
+                    $("#next_btn").css('cursor', 'pointer');
+                } else if ( history_position === navigation_history.length-1 ) {
+                    $("#next_btn").css('color', '');
+                    $("#next_btn").css('cursor', '');
+                }
+
+            }
+
+            function createCredential(suggested_password) {
+
+                vex.dialog.open({
+                    message: 'Please, create a new username.',
+                    input: [
+                        '<style>',
+                            '.vex-custom-field-wrapper {',
+                                'margin: 1em 0;',
+                            '}',
+                            '.vex-custom-field-wrapper > label {',
+                                'display: inline-block;',
+                                'margin-bottom: .2em;',
+                            '}',
+                        '</style>',
+                        '<div class="vex-custom-field-wrapper">',
+                            '<label for="username">Enter your new username and password:</label>',
+                            '<div class="vex-custom-input-wrapper">',
+                                '<input name="username" type="text" placeholder="Username" required />'+
+                            '</div>',
+                        '</div>',
+                        '<div class="vex-custom-field-wrapper">',
+                            '<label for="password">Password:</label>',
+                            '<label for="password">(Please, consider using the sugested password. Words are easy to memorize and can be combined in a huge variaty of possibilities)</label>',
+                            '<label for="password"><b>"'+suggested_password+'"</b></label>',
+                            '<div class="vex-custom-input-wrapper">',
+                                '<input name="password" type="password" placeholder="Password" required value="'+suggested_password+'"/>',
+                            '</div>',
+                        '</div>'
+                    ].join(''),
+                    callback: function (data) {
+                        if (!data) {
+                            return console.log('Cancelled')
+                        } else {
+                            ipcRenderer.send("createNewCredential", JSON.stringify(data));                            
+                        }
+                    }
+                });
+
+            }
+
+            function returnGetConfigs(configs) {
+
+                configs = JSON.parse(configs);
+
+                $("#configsInput_ServerAddress").val(configs.server);
+                $("#configsInput_LocalAPIAddress").val(configs.ipfsAPI);
+                $("#configsInput_MirrorAddress").val(configs.mirrors);
+                $("#configsInput_MirrorSwarmAddress").val(configs.mirrorsSwarms);
+                $("#configsInput_RelaySwarmAddress").val(configs.relaysSwarms);
+
+                $("#configsInput_ServerAddress").off('change', null);
+                $("#configsInput_ServerAddress").on('change', updateConfigs);
+
+                $("#configsInput_LocalAPIAddress").off('change', null);
+                $("#configsInput_LocalAPIAddress").on('change', updateConfigs);
+
+                $("#configsInput_MirrorAddress").off('change', null);
+                $("#configsInput_MirrorAddress").on('change', updateConfigs);
+
+                $("#configsInput_MirrorSwarmAddress").off('change', null);
+                $("#configsInput_MirrorSwarmAddress").on('change', updateConfigs);
+
+                $("#configsInput_RelaySwarmAddress").off('change', null);
+                $("#configsInput_RelaySwarmAddress").on('change', updateConfigs);
+
+            }
+
+            function returnSwarmsList(swarms) {
+
+                swarms = JSON.parse(swarms);
+
+                var swarmTableContent = "";
+
+                for (var i = 0; i < swarms.length; i++) {
+
+                    swarmTableContent = swarmTableContent +
+                        "<tr>"+
+                            "<td>"+swarms[i].address+"</td>"+
+                            "<td>"+
+                                "<i class='fas fa-minus btRemoveSwarmPair' style='cursor: pointer; color: #222a6f;' address='"+swarms[i].address+"'></i>"
+                            "</td>"+
+                        "</tr>";
+
+                }
+
+                $("#swarmTableContent").html(
+                    "<table class='table table-bordered' id='swarmTableContent_' width='100%' cellspacing='0'>"+
+                        "<thead>"+
+                            "<tr>"+
+                                "<th>Swarm Address</th><th>Actions</th>"+
+                            "</tr>"+
+                        "</thead>"+
+                        "<tfoot>"+
+                            "<tr>"+
+                                "<th>Swarm Address</th><th>Actions</th>"+
+                            "</tr>"+
+                        "</tfoot>"+
+                        "<tbody>"+
+                            swarmTableContent+
+                        "</tbody>"+
+                    "</table>");
+
+                $("#swarmTableContent_").DataTable();
+
+                $(".btRemoveSwarmPair").off('click', null);
+                $(".btRemoveSwarmPair").on('click', function () {
+
+                    ipcRenderer.send("rmSwarmPair", JSON.stringify({"address": $(this).attr("address")}));
+
+                });
+
+            }
+
+            function updateConfigs() {
+
+                var configs_ = {
+                    "server": $("#configsInput_ServerAddress").val(),
+                    "ipfsAPI": $("#configsInput_LocalAPIAddress").val(),
+                    "mirrorsSwarms": $("#configsInput_MirrorSwarmAddress").val(),
+                    "mirrors": $("#configsInput_MirrorAddress").val(),
+                    "relaysSwarms": $("#configsInput_RelaySwarmAddress").val()
+                };
+                
+                ipcRenderer.send("setConfigs", JSON.stringify(configs_));
+
+            }
+
+            $(document).ready(function () {
+
+                hsDivs("#indexDiv");
+
+                $("#indexBt").click(function () {
+                    hsDivs("#indexDiv");
+                });
+
+                $("#configBt").click(function () {
+
+                    ipcRenderer.send("getConfigs", null);
+                    hsDivs("#configsDiv");
+
+                });
+
+                $("#syncBt").click(function () {
+
+
+
+                });
+
+                $("#swarmsBt").click(function () {
+
+                    // Call IPC to get swarms
+                    ipcRenderer.send("getSwarmsList", null);
+                    
+                    hsDivs("#swarmsDiv");
+
+                });
+
+                $("#infoBt").click(function () {
+                    hsDivs("#infoDiv");
+                });
+
+                $("#aboutBt").click(function () {
+                    hsDivs("#aboutDiv");
+                });
+
+                $("#back_btn").off('click', null);
+                $("#back_btn").on('click', function () {
+
+                    if ( history_position > 0 ) {
+                        history_position--;
+                        if ( history_position === 0 ) {
+                            processFileExplorer('root', metadata);
+                        } else {
+                            processFileExplorer(navigation_history[history_position], searchObjectOnMetadataStructure(metadata, navigation_history[history_position]).processed_child);
+                        }
+                    }
+                    
+                    processBackAndForwardButtons();
+
+                });
+
+                $("#next_btn").off('click', null);
+                $("#next_btn").on('click', function () {
+
+                    if ( history_position < navigation_history.length-1 ) {
+                        history_position++;
+                        processFileExplorer(navigation_history[history_position], searchObjectOnMetadataStructure(metadata, navigation_history[history_position]).processed_child);
+                    }
+
+                    processBackAndForwardButtons();
+
+                });
+
+                $("#swarm_add_btn").off('click', null);
+                $("#swarm_add_btn").on('click', function () {
+
+                    vex.dialog.open({
+                        //message: 'Select the IPS file to import.',
+                        input: [
+                            '<style>',
+                                '.vex.vex-theme-os .vex-content {',
+                                    'width: 740px;',
+                                '}',
+                                '.vex-custom-field-wrapper {',
+                                    'margin: 1em 0;',
+                                '}',
+                                '.vex-custom-field-wrapper > label {',
+                                    'display: inline-block;',
+                                    'margin-bottom: .2em;',
+                                '}',
+                            '</style>',
+                            '<div class="vex-custom-field-wrapper">',
+                                '<label for="date">Please insert a Swarm Address:</label>',
+                                '<label>(ex.: "/ip4/1.1.1.1/tcp/4001/ipfs/QmYxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")</label>',
+                                '<div class="vex-custom-input-wrapper">',
+                                    '<input type="text" id="swarm_address_input" name="swarm_address_input" />',
+                                '</div>',
+                            '</div>'
+                        ].join(''),
+                        buttons: [
+                            $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                            $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                        ],
+                        callback: function (data) {
+                            if (!data) {
+                                console.log('Cancelled')
+                            } else {
+                                ipcRenderer.send("addSwarmPair", JSON.stringify({"address": $("#swarm_address_input").val()}));
+                            }
+                        }
+                    });
+
+                });
+
+            });
+
+        </script>
+        
+    </body>
+
+</html>

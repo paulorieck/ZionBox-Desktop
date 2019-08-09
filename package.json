@@ -1,0 +1,21 @@
+{
+  "name": "zionbox-desktop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "zionbox-desktop.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "Grupo GWTK (www.gwtk.com.br)",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "electron": "^5.0.6",
+    "file-extension": "^4.0.5",
+    "node-ipc": "^9.1.1",
+    "node-notifier": "^5.4.0",
+    "os-locale": "^4.0.0",
+    "try-to-catch": "^1.1.1"
+  }
+}
