@@ -1,6 +1,6 @@
 {
   "name": "zionbox-desktop",
-  "version": "1.0.1",
+  "version": "1.0.7",
   "description": "",
   "main": "zionbox-desktop.js",
   "scripts": {
@@ -15,10 +15,11 @@
     "file-extension": "^4.0.5",
     "node-ipc": "^9.1.1",
     "node-notifier": "^5.4.0",
+    "npm-auto-update": "^1.1.3",
     "os-locale": "^4.0.0",
     "try-to-catch": "^1.1.1"
   },
   "bin": {
-    "zionboxdesktop": "./bin/startup.js"
+    "zionboxdesktop": "./startup.js"
   }
 }

@@ -136,7 +136,32 @@ ipcMain.on('importShare', (event, obj) => {
 
 //app.on('ready', createWindow);
 app.on('ready', function () {
-    createWindow();
+
+    const npmAutoUpdate = new (require('npm-auto-update'))(console);
+    npmAutoUpdate.checkForUpdate((error, result) => {
+
+        if ( result ) {
+
+            console.log("Updating ZionBox-Desktop");
+
+            this.npmAutoUpdate.updatePackage((error, result) => {
+
+                createWindow();
+                connectToIPCServer();
+
+            });
+
+        } else {
+
+            createWindow();
+            connectToIPCServer();
+
+        }
+
+    });
+
+    
+
 });
 
 function connectToIPCServer() {
@@ -344,4 +369,3 @@ function connectToIPCServer() {
     );
 
 }
-connectToIPCServer();
