@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const {app, BrowserWindow, ipcMain, dialog, shell} = require('electron');
+const npmAutoUpdate = new (require('npm-auto-update'))(console);
 const notifier = require('node-notifier');
 const osLocale = require('os-locale');
 const fs = require('fs');
@@ -37,107 +38,110 @@ function createWindow () {
 
 }
 
-ipcMain.on('getBinary', (event, metadata_hash) => {
-    global.ipc.emit('message', JSON.stringify({"op": "getBinary", "metadata_hash": metadata_hash}));
-});
+function listenIPCMain() {
 
-ipcMain.on('importLocalFolder', (event, variable) => {
-
-    const options = {
-        title: 'Selecione uma pasta para importar',
-        properties: ['openDirectory']
-    };
-
-    dialog.showOpenDialog(null, options, (foldersPaths) => {
-        if ( typeof foldersPaths !== "undefined" ) {
-            global.ipc.emit('message', JSON.stringify({"op": "importLocalFolders", 'foldersPaths': foldersPaths}));
+    ipcMain.on('getBinary', (event, metadata_hash) => {
+        global.ipc.emit('message', JSON.stringify({"op": "getBinary", "metadata_hash": metadata_hash}));
+    });
+    
+    ipcMain.on('importLocalFolder', (event, variable) => {
+    
+        const options = {
+            title: 'Selecione uma pasta para importar',
+            properties: ['openDirectory']
+        };
+    
+        dialog.showOpenDialog(null, options, (foldersPaths) => {
+            if ( typeof foldersPaths !== "undefined" ) {
+                global.ipc.emit('message', JSON.stringify({"op": "importLocalFolders", 'foldersPaths': foldersPaths}));
+            }
+        });
+    
+    });
+    
+    ipcMain.on('createNewCredential', (event, data) => {
+        data = JSON.parse(data);
+        global.ipc.emit('message', JSON.stringify({"op": "createNewCredential", 'username': data.username, 'password': data.password}));
+    });
+    
+    ipcMain.on('getSwarmsList', (event, data) => {
+        global.ipc.emit('message', JSON.stringify({"op": "getSwarmsList"}));
+    });
+    
+    ipcMain.on('getConfigs', (event, data) => {
+        global.ipc.emit('message', JSON.stringify({"op": "getConfigs"}));
+    });
+    
+    ipcMain.on('addSwarmPair', (event, data) => {
+        data = JSON.parse(data);
+        global.ipc.emit('message', JSON.stringify({"op": "addSwarmPair", "address": data.address}));
+    });
+    
+    ipcMain.on('rmSwarmPair', (event, data) => {
+        data = JSON.parse(data);
+        global.ipc.emit('message', JSON.stringify({"op": "rmSwarmPair", "address": data.address}));
+    });
+    
+    ipcMain.on('checkCredentials', (event, data) => {
+        data = JSON.parse(data);
+        global.ipc.emit('message', JSON.stringify({"op": "doLogin", 'username': data.username, 'password': data.password}));
+    });
+    
+    ipcMain.on('createRootDirectory', (event, name) => {
+        global.ipc.emit('message', JSON.stringify({"op": "createRootDirectory", 'name': name}));
+    });
+    
+    ipcMain.on('createSubdirectory', (event, obj) => {
+        obj = JSON.parse(obj);
+        global.ipc.emit('message', JSON.stringify({"op": "createSubdirectory", 'name': obj.name, 'metadata_hash': obj.metadata_hash}));
+    });
+    
+    ipcMain.on('addFile', (event, obj) => {
+        obj = JSON.parse(obj);
+        global.ipc.emit('message', JSON.stringify({"op": "addFile", 'path': obj.path, 'metadata_hash': obj.metadata_hash, 'encrypt': obj.encrypt}));
+    });
+    
+    ipcMain.on('remove', (event, metadata_hash) => {
+        global.ipc.emit('message', JSON.stringify({"op": "remove", 'metadata_hash': metadata_hash}));
+    });
+    
+    ipcMain.on('importPublicHash', (event, obj) => {
+        obj = JSON.parse(obj);
+        global.ipc.emit('message', JSON.stringify({"op": "importPublicHash", 'hash': obj.hash, 'parent_location_hash': obj.parent_location_hash, 'name': obj.name}));
+    });
+    
+    ipcMain.on('setConfigs', (event, obj) => {
+        obj = JSON.parse(obj);
+        global.ipc.emit('message', JSON.stringify({"op": "setConfigs", "server": obj.server, "ipfsAPI": obj.ipfsAPI, "mirrorsSwarms": obj.mirrorsSwarms, "mirrors": obj.mirrors, "relaysSwarms": obj.relaysSwarms}));
+    });
+    
+    ipcMain.on('shareRoot', (event, metadata_hash) => {
+        
+        var words = rword.generate(6);
+    
+        var wordsStr = "";
+        for (var i = 0; i < words.length; i++) {
+            if ( i === 0 ) {
+                wordsStr = wordsStr + words[i];
+            } else {
+                wordsStr = wordsStr+" "+words[i];
+            }
         }
+    
+        global.ipc.emit('message', JSON.stringify({"op": "shareRoot", 'metadata_hash': metadata_hash, 'passphrase': wordsStr}));
+    
+    });
+    
+    ipcMain.on('importShare', (event, obj) => {
+        obj = JSON.parse(obj);
+        global.ipc.emit('message', JSON.stringify({"op": "importShare", "file_path": obj.file_path, "passphrase": obj.passphrase}));
     });
 
-});
-
-ipcMain.on('createNewCredential', (event, data) => {
-    data = JSON.parse(data);
-    global.ipc.emit('message', JSON.stringify({"op": "createNewCredential", 'username': data.username, 'password': data.password}));
-});
-
-ipcMain.on('getSwarmsList', (event, data) => {
-    global.ipc.emit('message', JSON.stringify({"op": "getSwarmsList"}));
-});
-
-ipcMain.on('getConfigs', (event, data) => {
-    global.ipc.emit('message', JSON.stringify({"op": "getConfigs"}));
-});
-
-ipcMain.on('addSwarmPair', (event, data) => {
-    data = JSON.parse(data);
-    global.ipc.emit('message', JSON.stringify({"op": "addSwarmPair", "address": data.address}));
-});
-
-ipcMain.on('rmSwarmPair', (event, data) => {
-    data = JSON.parse(data);
-    global.ipc.emit('message', JSON.stringify({"op": "rmSwarmPair", "address": data.address}));
-});
-
-ipcMain.on('checkCredentials', (event, data) => {
-    data = JSON.parse(data);
-    global.ipc.emit('message', JSON.stringify({"op": "doLogin", 'username': data.username, 'password': data.password}));
-});
-
-ipcMain.on('createRootDirectory', (event, name) => {
-    global.ipc.emit('message', JSON.stringify({"op": "createRootDirectory", 'name': name}));
-});
-
-ipcMain.on('createSubdirectory', (event, obj) => {
-    obj = JSON.parse(obj);
-    global.ipc.emit('message', JSON.stringify({"op": "createSubdirectory", 'name': obj.name, 'metadata_hash': obj.metadata_hash}));
-});
-
-ipcMain.on('addFile', (event, obj) => {
-    obj = JSON.parse(obj);
-    global.ipc.emit('message', JSON.stringify({"op": "addFile", 'path': obj.path, 'metadata_hash': obj.metadata_hash, 'encrypt': obj.encrypt}));
-});
-
-ipcMain.on('remove', (event, metadata_hash) => {
-    global.ipc.emit('message', JSON.stringify({"op": "remove", 'metadata_hash': metadata_hash}));
-});
-
-ipcMain.on('importPublicHash', (event, obj) => {
-    obj = JSON.parse(obj);
-    global.ipc.emit('message', JSON.stringify({"op": "importPublicHash", 'hash': obj.hash, 'parent_location_hash': obj.parent_location_hash, 'name': obj.name}));
-});
-
-ipcMain.on('setConfigs', (event, obj) => {
-    obj = JSON.parse(obj);
-    global.ipc.emit('message', JSON.stringify({"op": "setConfigs", "server": obj.server, "ipfsAPI": obj.ipfsAPI, "mirrorsSwarms": obj.mirrorsSwarms, "mirrors": obj.mirrors, "relaysSwarms": obj.relaysSwarms}));
-});
-
-ipcMain.on('shareRoot', (event, metadata_hash) => {
-    
-    var words = rword.generate(6);
-
-    var wordsStr = "";
-    for (var i = 0; i < words.length; i++) {
-        if ( i === 0 ) {
-            wordsStr = wordsStr + words[i];
-        } else {
-            wordsStr = wordsStr+" "+words[i];
-        }
-    }
-
-    global.ipc.emit('message', JSON.stringify({"op": "shareRoot", 'metadata_hash': metadata_hash, 'passphrase': wordsStr}));
-
-});
-
-ipcMain.on('importShare', (event, obj) => {
-    obj = JSON.parse(obj);
-    global.ipc.emit('message', JSON.stringify({"op": "importShare", "file_path": obj.file_path, "passphrase": obj.passphrase}));
-});
+}
 
 //app.on('ready', createWindow);
 app.on('ready', function () {
 
-    const npmAutoUpdate = new (require('npm-auto-update'))(console);
     npmAutoUpdate.checkForUpdate((error, result) => {
 
         if ( result ) {
@@ -148,19 +152,21 @@ app.on('ready', function () {
 
                 createWindow();
                 connectToIPCServer();
+                listenIPCMain();
 
             });
 
         } else {
 
+            console.log("ZionBox-Desktop is up to date");
+
             createWindow();
             connectToIPCServer();
+            listenIPCMain();
 
         }
 
     });
-
-    
 
 });
 
