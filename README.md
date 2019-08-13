@@ -4,7 +4,9 @@ This is a secured and decentralized file system on the web!
 
 To install ZionBox, please do it globally with the following command:
 
+```
 npm i zionbox-desktop -g
+```
 
 Execute from command line using "zionboxdesktop" command.
 
