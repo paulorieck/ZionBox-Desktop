@@ -11,15 +11,11 @@ npm i zionbox-desktop -g
 Execute from command line using "zionboxdesktop" command.
 
 ## Donations
-Help us to develop and improve this 
+Help us to develop and improve this software!
 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick" />
-<input type="hidden" name="hosted_button_id" value="BPL6U33XS9HYA" />
-<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-<img alt="" border="0" src="https://www.paypal.com/en_BR/i/scr/pixel.gif" width="1" height="1" />
-</form>
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPL6U33XS9HYA)
 
+## Release notes
 THIS IS AN INITIAL RELEASE. USE AT YOUR OWN RISK. WE DO NOT PROVIDE ANY KIND OF WARRANTY! You should understand how [IPFS](https://ipfs.io) works before start this adventure.
 
 ZionBox is a system based on the [IPFS](https://ipfs.io) technology. You can see it as a file manager with some additional features. These features are:
