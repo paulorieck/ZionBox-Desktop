@@ -1,6 +1,6 @@
 {
   "name": "zionbox-desktop",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "zionbox-desktop.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "try-to-catch": "^1.1.1"
   },
   "bin": {
+    "preinstall": "npm i -g node-gyp electron zionbox-service",
     "zionboxdesktop": "./startup.js"
   }
 }
