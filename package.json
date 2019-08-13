@@ -1,7 +1,7 @@
 {
   "name": "zionbox-desktop",
-  "version": "1.0.17",
-  "description": "",
+  "version": "1.0.18",
+  "description": "DESKTOP Module - This is a secured and decentralized file system on the web!",
   "main": "zionbox-desktop.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -21,5 +21,18 @@
   },
   "bin": {
     "zionboxdesktop": "./startup.js"
+  },
+  "keywords": [
+    "client",
+    "ipfs",
+    "file manager",
+    "decentralized",
+    "decentralization",
+    "aes256",
+    "crypto"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paulorieck/ZionBox-Service.git"
   }
 }
