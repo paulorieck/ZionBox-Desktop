@@ -18,27 +18,22 @@ plataform_dependent_modules_installation.on('close', (code) => {
 
     if ( os.platform() === "win32" ) {
 
-        const windows_shortcut_vbs = require("windows-shortcut-vbs");
+        const windows_shortcut = require("create-windows-shortcut");
     
         var origin_path = path.join(__dirname, "startup.vbs");
     
-        //////////////////////
+        //////////////////////////////////////
         // Creates icon on user's Destkop
     
-        windows_shortcut_vbs.createShortcutInSpecialFolder("Desktop", origin_path, "ZionBox").then( (shortcutPath) => {
-            console.log(`Shortcut path: ${shortcutPath}`);
-        }).catch( (err) => {
-            console.log(err);
+        windows_shortcut.createShortcut(origin_path, os.homedir()+"\\Desktop", "ZionBox", function () {
+            console.log("Shortcut on desktop successfully created!");
         });
     
-        //////////////////////
+        //////////////////////////////////////
         // Creates icon on user's Menu
-    
-        //%AppData%\Microsoft\Windows\Start Menu\Programs
-        windows_shortcut_vbs.createShortcutInSpecialFolder("AppData\\Microsoft\\Windows\\Start Menu\\Programs", origin_path, "ZionBox").then( (shortcutPath) => {
-            console.log(`Shortcut path: ${shortcutPath}`);
-        }).catch( (err) => {
-            console.log(err);
+
+        windows_shortcut.createShortcut(origin_path, os.homedir()+"\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs", "ZionBox", function () {
+            console.log("Shortcut on menu successfully created!");
         });
     
     }
