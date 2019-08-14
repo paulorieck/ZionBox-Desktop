@@ -2,17 +2,16 @@
 
 const os = require('os');
 const path = require('path');
-
-const exec = require('child-process').exec;
+const {exec} = require('child_process');
 
 var plataform_dependent_modules_installation = exec("node node_modules/platform-dependent-modules/cli.js");
 
 plataform_dependent_modules_installation.stdout.on('data', (data) => {
-    console.log(`install_pm2 => stdout: ${data}`);
+    console.log(`plataform_dependent_modules_installation => stdout: ${data}`);
 });
 
 plataform_dependent_modules_installation.stderr.on('data', (data) => {
-    console.log(`install_pm2 => stderr: ${data}`);
+    console.log(`plataform_dependent_modules_installation => stderr: ${data}`);
 });
 
 plataform_dependent_modules_installation.on('close', (code) => {
