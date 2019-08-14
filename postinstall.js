@@ -3,7 +3,7 @@
 const os = require('os');
 const path = require('path');
 
-if ( os.platform === "win32" ) {
+if ( os.platform() === "win32" ) {
 
     const windows_shortcut_vbs = require("windows-shortcut-vbs");
 
