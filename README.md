@@ -1,8 +1,8 @@
 # ZionBox-Desktop
 
-![alt text](https://www.gwtk.com.br/imagens_publicas/5d53fa6669775.jpg)
+This is a secured and decentralized file system on the web! Keep your data secured from governments and big companies.
 
-This is a secured and decentralized file system on the web!
+![alt text](https://www.gwtk.com.br/imagens_publicas/5d53fa6669775.jpg)
 
 To install ZionBox, please do it globally with the following command:
 

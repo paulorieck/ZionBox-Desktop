@@ -148,7 +148,7 @@ app.on('ready', function () {
 
             console.log("Updating ZionBox-Desktop");
 
-            this.npmAutoUpdate.updatePackage((error, result) => {
+            npmAutoUpdate.updatePackage((error, result) => {
 
                 createWindow();
                 connectToIPCServer();
