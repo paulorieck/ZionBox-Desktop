@@ -1,6 +1,6 @@
 {
   "name": "zionbox-desktop",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "DESKTOP Module - This is a secured and decentralized file system on the web!",
   "main": "zionbox-desktop.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "platformDependentModules": {
       "win32": [
         "tmp@^0.1.0",
-        "prettyjson^1.2.1",
+        "prettyjson@^1.2.1",
         "windows-shortcut-vbs@^0.5.3"
       ]
     }
