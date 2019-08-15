@@ -20,15 +20,12 @@
     "os-locale": "^4.0.0",
     "try-to-catch": "^1.1.1",
     "windows-shortcut-vbs": "^0.5.3",
-    "platform-dependent-modules": "^0.0.14",
-    "create-windows-shortcut": "^0.0.2"
+    "platform-dependent-modules": "^0.0.14"
   },
   "config": {
     "platformDependentModules": {
       "win32": [
-        "tmp@^0.1.0",
-        "prettyjson@^1.2.1",
-        "windows-shortcut-vbs@^0.5.3"
+        "create-windows-shortcut@^0.0.2"
       ]
     }
   },

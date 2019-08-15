@@ -4,17 +4,17 @@ const os = require('os');
 const path = require('path');
 const {exec} = require('child_process');
 
-var plataform_dependent_modules_installation = exec("node node_modules/platform-dependent-modules/cli.js");
+var platform_dependent_modules_installation = exec("node node_modules/platform-dependent-modules/cli.js");
 
-plataform_dependent_modules_installation.stdout.on('data', (data) => {
-    console.log(`plataform_dependent_modules_installation => stdout: ${data}`);
+platform_dependent_modules_installation.stdout.on('data', (data) => {
+    console.log(`platform_dependent_modules_installation => stdout: ${data}`);
 });
 
-plataform_dependent_modules_installation.stderr.on('data', (data) => {
-    console.log(`plataform_dependent_modules_installation => stderr: ${data}`);
+platform_dependent_modules_installation.stderr.on('data', (data) => {
+    console.log(`platform_dependent_modules_installation => stderr: ${data}`);
 });
 
-plataform_dependent_modules_installation.on('close', (code) => {
+platform_dependent_modules_installation.on('close', (code) => {
 
     if ( os.platform() === "win32" ) {
 
