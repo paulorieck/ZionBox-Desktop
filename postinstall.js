@@ -45,11 +45,13 @@ platform_dependent_modules_installation.on('close', (code) => {
     
     } else if ( os.platform() === "darwin" ) {
 
-        const fs = require('fs');
+        var ncp = require('ncp').ncp;
 
         // Copy ZionBox.app to /Applications/
-        fs.copyFile('ZionBox.app', '/Applications/ZionBox.app', (err) => {
-            if (err) throw err;
+        ncp('ZionBox.app', '/Applications/ZionBox.app', (err) => {
+            if (err) {
+                console.log(err);
+            }
             console.log('source.txt was copied to destination.txt');
         });
 
