@@ -52,7 +52,7 @@ platform_dependent_modules_installation.on('close', (code) => {
             if (err) {
                 console.log(err);
             }
-            console.log('source.txt was copied to destination.txt');
+            console.log('Shortcut successfully created!');
         });
 
     }
