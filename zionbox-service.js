@@ -1218,26 +1218,7 @@ function main() {
 
 }
 
-const npmAutoUpdate = new (require('npm-auto-update'))(console);
-npmAutoUpdate.checkForUpdate((error, result) => {
-
-    if ( result ) {
-
-        console.log("Updating ZionBox-Service");
-
-        npmAutoUpdate.updatePackage((error, result) => {
-
-            main();
-
-        });
-
-    } else {
-
-        main();
-
-    }
-    
-});
+main();
 
 zionbox_service = module.exports = {
 
