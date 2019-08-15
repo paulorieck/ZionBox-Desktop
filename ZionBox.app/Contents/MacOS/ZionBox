@@ -1,15 +1,8 @@
 #!/usr/bin/env node
 
-const {spawn} = require('child_process');
+const {exec} = require('child_process');
 
-var args = [__dirname+"/."];
-
-const options = {
-  cwd: __dirname,
-  spawn: spawn
-}
-
-const electron = spawn("electron", args, options);
+const electron = exec("node /usr/local/lib/node_modules/zionbox-desktop/startup.js");
 
 electron.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);

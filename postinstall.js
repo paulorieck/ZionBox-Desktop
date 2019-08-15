@@ -43,6 +43,14 @@ platform_dependent_modules_installation.on('close', (code) => {
             console.log("Shortcut on menu successfully created!");
         });
     
+    } else if ( os.platform() === "darwin" ) {
+
+        // Copy ZionBox.app to /Applications/
+        fs.copyFile('ZionBox.app', '/Applications/ZionBox.app', (err) => {
+            if (err) throw err;
+            console.log('source.txt was copied to destination.txt');
+        });
+
     }
 
 });
