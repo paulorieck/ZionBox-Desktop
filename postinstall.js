@@ -25,14 +25,14 @@ plataform_dependent_modules_installation.on('close', (code) => {
         //////////////////////////////////////
         // Creates icon on user's Destkop
     
-        windows_shortcut.createShortcut(origin_path, os.homedir()+"\\Desktop", "ZionBox", function () {
+        windows_shortcut.createShortcut(origin_path, os.homedir()+"\\Desktop", "ZionBox", __dirname+"\\favicon.ico", function () {
             console.log("Shortcut on desktop successfully created!");
         });
     
         //////////////////////////////////////
         // Creates icon on user's Menu
 
-        windows_shortcut.createShortcut(origin_path, os.homedir()+"\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs", "ZionBox", function () {
+        windows_shortcut.createShortcut(origin_path, os.homedir()+"\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs", __dirname+"\\favicon.ico", "ZionBox", function () {
             console.log("Shortcut on menu successfully created!");
         });
     

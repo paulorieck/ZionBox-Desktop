@@ -1,6 +1,6 @@
 {
   "name": "zionbox-desktop",
-  "version": "1.0.29",
+  "version": "1.0.30",
   "description": "DESKTOP Module - This is a secured and decentralized file system on the web!",
   "main": "zionbox-desktop.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "try-to-catch": "^1.1.1",
     "windows-shortcut-vbs": "^0.5.3",
     "platform-dependent-modules": "^0.0.14",
-    "create-windows-shortcut": "^0.0.1"
+    "create-windows-shortcut": "^0.0.2"
   },
   "config": {
     "platformDependentModules": {
