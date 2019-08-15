@@ -45,6 +45,8 @@ platform_dependent_modules_installation.on('close', (code) => {
     
     } else if ( os.platform() === "darwin" ) {
 
+        const fs = require('fs');
+
         // Copy ZionBox.app to /Applications/
         fs.copyFile('ZionBox.app', '/Applications/ZionBox.app', (err) => {
             if (err) throw err;
