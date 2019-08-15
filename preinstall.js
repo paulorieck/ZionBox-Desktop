@@ -33,21 +33,6 @@ install_node_gyp.on('close', (code) => {
 
         console.log(`install_electron => child process exited with code ${code}`);
 
-        ///////////////////////////
-
-        const install_zionservice = exec("npm list zionbox-service -g || npm i -g zionbox-service");
-        install_zionservice.stdout.on('data', (data) => {
-            console.log(`install_zionservice => stdout: ${data}`);
-        });
-
-        install_zionservice.stderr.on('data', (data) => {
-        console.log(`install_zionservice => stderr: ${data}`);
-        });
-
-        install_zionservice.on('close', (code) => {
-        console.log(`install_zionservice => child process exited with code ${code}`);
-        });
-
     });
 
     
