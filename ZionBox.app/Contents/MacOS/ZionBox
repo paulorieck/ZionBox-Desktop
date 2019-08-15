@@ -6,7 +6,7 @@ var args = [__dirname+"/."];
 
 const options = {
   cwd: __dirname,
-  spawn: false
+  spawn: spawn
 }
 
 const electron = spawn("electron", args, options);
