@@ -2,16 +2,23 @@
 
 const os = require('os');
 const path = require('path');
-const {exec} = require('child_process');
+const {spawn} = require('child_process');
 
-var platform_dependent_modules_installation = exec("node node_modules/platform-dependent-modules/cli.js");
+var args = [__dirname+"/node_modules/platform-dependent-modules/cli.js"];
+var options = {
+    cwd: __dirname,
+    spawn: false
+}
+
+console.log("node "+__dirname+"/node_modules/platform-dependent-modules/cli.js");
+var platform_dependent_modules_installation = spawn("node", args, options);
 
 platform_dependent_modules_installation.stdout.on('data', (data) => {
     console.log(`platform_dependent_modules_installation => stdout: ${data}`);
 });
 
 platform_dependent_modules_installation.stderr.on('data', (data) => {
-    console.log(`platform_dependent_modules_installation => stderr: ${data}`);
+    console.log(`plataform_dependent_modules_installation => stderr: ${data}`);
 });
 
 platform_dependent_modules_installation.on('close', (code) => {
