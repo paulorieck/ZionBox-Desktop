@@ -1,6 +1,6 @@
 {
   "name": "zionbox-desktop",
-  "version": "1.0.41",
+  "version": "1.0.42",
   "description": "DESKTOP Module - This is a secured and decentralized file system on the web!",
   "main": "zionbox-desktop.js",
   "scripts": {
