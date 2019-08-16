@@ -1179,13 +1179,15 @@ function main() {
                             });
         
                         } else if ( data.op === 'inform_new_login' ) { // KEEP AS WS CONNECTION!
-        
-                            for (var i = 0; i < data.login_multi_addresses.length; i++) {
-                                ipfs.swarmConnect(data.login_multi_addresses[i], function () { 
-                                    console.log("Connected to another peer through swarm with address "+data.login_multi_addresses[i]);
-                                });
+
+                            if ( data.login_multi_addresses !== null ) {
+                                for (var i = 0; i < data.login_multi_addresses.length; i++) {
+                                    ipfs.swarmConnect(data.login_multi_addresses[i], function () { 
+                                        console.log("Connected to another peer through swarm with address "+data.login_multi_addresses[i]);
+                                    });
+                                }
                             }
-        
+                            
                         }
         
                     });
@@ -1398,13 +1400,15 @@ zionbox_service = module.exports = {
                             // Pair swarm multi addresses
                             var multi_address = data.multi_addresses;
                             for (var i = 0; i < multi_address.length; i++) {
-                                for (var j = 0; j < multi_address[i].length; j++) {
+                                if ( multi_address[i] !== null ) {
+                                    for (var j = 0; j < multi_address[i].length; j++) {
     
-                                    var address = multi_address[i][j];
-    
-                                    console.log("Connecting to another peer through swarm with address "+address);
-                                    ipfs.swarmConnect(address, function () {});
-    
+                                        var address = multi_address[i][j];
+        
+                                        console.log("Connecting to another peer through swarm with address "+address);
+                                        ipfs.swarmConnect(address, function () {});
+        
+                                    }
                                 }
                             }
     

@@ -3,7 +3,7 @@
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
-const {exec, spawn} = require('child_process');
+const {spawn} = require('child_process');
 
 ///////////////////////////
 
@@ -37,34 +37,6 @@ if ( !fs.existsSync(path.join(homedir, ".zionbox-service/configs.json")) ) {
     fs.writeFileSync(path.join(homedir, ".zionbox-service/configs.json"), JSON.stringify({"server": "", "ipfsAPI": "", "mirrorsSwarms": "", "mirrors": "", "relaysSwarms": ""}));
 }
 
-///////////////////////////
-
-const install_pm2 = exec("npm list pm2 -g || npm i -g pm2");
-install_pm2.stdout.on('data', (data) => {
-    console.log(`install_pm2 => stdout: ${data}`);
-});
-
-install_pm2.stderr.on('data', (data) => {
-console.log(`install_pm2 => stderr: ${data}`);
-});
-
-install_pm2.on('close', (code) => {
-
-    console.log(`install_pm2 => child process exited with code ${code}`);
-
-    // Configure PM2 to start zionbox-service automatically on startup
-    const configure_pm2 = exec("pm2 start zionboxservice");
-
-    configure_pm2.stderr.on('data', (data) => {
-        console.log(`configure_pm2 => stderr: ${data}`);
-    });
-
-    install_pm2.on('close', (code) => {
-        console.log(`configure_pm2 => child process exited with code ${code}`);
-    });
-
-});
-
 /////////////////////////////////////////////////////////////
 
 var args = [__dirname+"/node_modules/platform-dependent-modules/cli.js"];
@@ -73,7 +45,6 @@ var options = {
     spawn: false
 }
 
-console.log("node "+__dirname+"/node_modules/platform-dependent-modules/cli.js");
 var platform_dependent_modules_installation = spawn("node", args, options);
 
 platform_dependent_modules_installation.stdout.on('data', (data) => {
@@ -121,4 +92,3 @@ platform_dependent_modules_installation.on('close', (code) => {
     }
 
 });
-
