@@ -4,7 +4,6 @@ const notifier = require('node-notifier');
 const osLocale = require('os-locale');
 const fs = require('fs');
 const path = require('path');
-const zionbox_service = require('./zionbox-service');
 
 const {rword} = require('./rword/dist/rword');
 rword.load('small_pt-BR');
@@ -54,7 +53,9 @@ function listenIPCMain() {
     
         dialog.showOpenDialog(null, options, (foldersPaths) => {
             if ( typeof foldersPaths !== "undefined" ) {
-                zionbox_service.importLocalFolders(foldersPaths);
+                zionbox_service.importLocalFolders(foldersPaths, function (size, root_name) {
+                    notifyImportationSize(size, root_name);
+                });
             }
         });
     
@@ -97,8 +98,12 @@ function listenIPCMain() {
     
     ipcMain.on('checkCredentials', (event, data) => {
         data = JSON.parse(data);
-        zionbox_service.doLogin(data.username, data.password, function (metadata_) {
-            returnGetAllMetadata(metadata_);
+        zionbox_service.doLogin(data.username, data.password, function (obj) {
+            if ( obj.success ) {
+                returnGetAllMetadata(obj.metadata);
+            } else {
+                win.webContents.executeJavaScript("loginFailed()");
+            }
         });
     });
     
@@ -275,6 +280,7 @@ function connectToIPCServer() {
 
 }
 
+
 module.exports = {
 
     notifyImportationSize: function (size, root_name) {
@@ -346,3 +352,4 @@ module.exports = {
     }
 
 }
+const zionbox_service = require('./zionbox-service');

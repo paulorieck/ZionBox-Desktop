@@ -36,6 +36,8 @@ var instance = axios.create({
     jar: jar
 });
 
+const zionbox_desktop = require('./zionbox-desktop');
+
 axiosCookieJarSupport(instance);
 
 var ws;
@@ -1354,78 +1356,90 @@ zionbox_service = module.exports = {
 
         credentialsDao.getCredentialByUsername(username, function (credential) {
 
-            credential = credential[0];
-    
-            // Check hash
-            bcrypt.compare(password, credential.hash, function(err, isLoggedIn) {
-    
-                console.log("Login successfull? "+isLoggedIn);
-                if ( isLoggedIn ) {
-    
-                    currentcredentials.username = username;
-                    currentcredentials.password = password;
-    
-                    ////////////////////////
-                    rootsDao.getAllByUsername(currentcredentials.username, function (roots) {
-    
-                        var topics_ids = [];
-                        for (var i = 0; i < roots.length; i++) {
-                            topics_ids.push(roots[i].topic);
-                        }
-    
-                        instance.post("/get_topics", {"peerId": myHash.id, "login_multi_addresses": myMultiAddresses, "topics_ids": topics_ids}).then((data) => {
-    
-                            data = data.data;
-    
-                            // Check topics
-                            var remote_topics = data.topics;
-                            rootsDao.getAllByUsername(currentcredentials.username, function (local_topics) {
-                                
-                                // Compare local and remote topics
-                                for (var i = 0; i < local_topics.length; i++) {
-                                    for (var j = 0; j < remote_topics.length; j++) {
-                                        if ( local_topics[i].topic === remote_topics[j].topic ) {
-    
-                                            if ( local_topics[i].metadata_hash !== remote_topics[j].metadata_hash ) {
-                                                local_topics[i].metadata_hash = remote_topics[j].metadata_hash;
-                                                rootsDao.update(local_topics[i], function() {});
+            if ( credential.length !== 0 ) {
+
+                credential = credential[0];
+
+                // Check hash
+                bcrypt.compare(password, credential.hash, function(err, isLoggedIn) {
+        
+                    console.log("Login successfull? "+isLoggedIn);
+                    if ( isLoggedIn ) {
+        
+                        currentcredentials.username = username;
+                        currentcredentials.password = password;
+        
+                        ////////////////////////
+                        rootsDao.getAllByUsername(currentcredentials.username, function (roots) {
+        
+                            var topics_ids = [];
+                            for (var i = 0; i < roots.length; i++) {
+                                topics_ids.push(roots[i].topic);
+                            }
+        
+                            instance.post("/get_topics", {"peerId": myHash.id, "login_multi_addresses": myMultiAddresses, "topics_ids": topics_ids}).then((data) => {
+        
+                                data = data.data;
+        
+                                // Check topics
+                                var remote_topics = data.topics;
+                                rootsDao.getAllByUsername(currentcredentials.username, function (local_topics) {
+                                    
+                                    // Compare local and remote topics
+                                    for (var i = 0; i < local_topics.length; i++) {
+                                        for (var j = 0; j < remote_topics.length; j++) {
+                                            if ( local_topics[i].topic === remote_topics[j].topic ) {
+        
+                                                if ( local_topics[i].metadata_hash !== remote_topics[j].metadata_hash ) {
+                                                    local_topics[i].metadata_hash = remote_topics[j].metadata_hash;
+                                                    rootsDao.update(local_topics[i], function() {});
+                                                }
+        
                                             }
-    
+                                        }
+                                    }
+        
+                                });
+        
+                                // Pair swarm multi addresses
+                                var multi_address = data.multi_addresses;
+                                for (var i = 0; i < multi_address.length; i++) {
+                                    if ( multi_address[i] !== null ) {
+                                        for (var j = 0; j < multi_address[i].length; j++) {
+        
+                                            var address = multi_address[i][j];
+            
+                                            console.log("Connecting to another peer through swarm with address "+address);
+                                            ipfs.swarmConnect(address, function () {});
+            
                                         }
                                     }
                                 }
-    
+        
                             });
-    
-                            // Pair swarm multi addresses
-                            var multi_address = data.multi_addresses;
-                            for (var i = 0; i < multi_address.length; i++) {
-                                if ( multi_address[i] !== null ) {
-                                    for (var j = 0; j < multi_address[i].length; j++) {
-    
-                                        var address = multi_address[i][j];
         
-                                        console.log("Connecting to another peer through swarm with address "+address);
-                                        ipfs.swarmConnect(address, function () {});
-        
-                                    }
-                                }
-                            }
-    
                         });
-    
-                    });
-                    ////////////////////////
-    
-                    processMetadata(function () {
-                        callback(metadata);
-                    });
-    
-                } else {
-                    currentcredentials = {};
-                }
-    
-            });
+                        ////////////////////////
+        
+                        processMetadata(function () {
+                            callback({"success": true, "metadata": metadata});
+                        });
+        
+                    } else {
+                        
+                        currentcredentials = {};
+                        callback({"success": false});
+
+                    }
+        
+                });
+
+            } else {
+
+                currentcredentials = {};
+                callback({"success": false});
+
+            }
     
         });
 

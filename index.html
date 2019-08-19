@@ -1138,6 +1138,47 @@
 
             }
 
+            function loginFailed() {
+
+                vex.dialog.open({
+                    message: 'Login',
+                    input: [
+                        '<style>',
+                            '.vex-custom-field-wrapper {',
+                                'margin: 1em 0;',
+                            '}',
+                            '.vex-custom-field-wrapper > label {',
+                                'display: inline-block;',
+                                'margin-bottom: .2em;',
+                            '}',
+                        '</style>',
+                        '<div class="vex-custom-field-wrapper">',
+                            '<label for="username" style="color: red;">Your last login attempt has failed, please, try again.</label>',
+                        '</div>',  
+                        '<div class="vex-custom-field-wrapper">',
+                            '<label for="username">Username</label>',
+                            '<div class="vex-custom-input-wrapper">',
+                                '<input name="username" type="text" placeholder="Username" required />'+
+                            '</div>',
+                        '</div>',
+                        '<div class="vex-custom-field-wrapper">',
+                            '<label for="password">Password:</label>',
+                            '<div class="vex-custom-input-wrapper">',
+                                '<input name="password" type="password" placeholder="Password" required />',
+                            '</div>',
+                        '</div>'
+                    ].join(''),
+                    callback: function (data) {
+                        if (!data) {
+                            return console.log('Cancelled')
+                        } else {
+                            ipcRenderer.send("checkCredentials", JSON.stringify(data));           
+                        }
+                    }
+                });
+
+            }
+
             $(document).ready(function () {
 
                 hsDivs("#indexDiv");
@@ -1155,7 +1196,7 @@
 
                 $("#syncBt").click(function () {
 
-
+                    
 
                 });
 
