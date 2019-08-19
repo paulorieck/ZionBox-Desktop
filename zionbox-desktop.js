@@ -31,7 +31,7 @@ function createWindow () {
 
     win.maximize();
 
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
 
     // and load the index.html of the app.
     win.loadFile('index.html');
@@ -74,7 +74,7 @@ function listenIPCMain() {
     
     ipcMain.on('getConfigs', (event, data) => {
         zionbox_service.getConfigs(function (configs_) {
-            win.webContents.executeJavaScript("returnGetConfigs('"+JSON.stringify(configs_)+"')");
+            win.webContents.executeJavaScript("returnGetConfigs('"+JSON.stringify(configs_)+"')");            
         });
     });
     

@@ -151,15 +151,25 @@
                                     </div>                                
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-4 col-md-4 col-sm-4">Mirror Address: </label>
+                                    <label class="col-lg-4 col-md-4 col-sm-4">Mirror Addresses: </label>
                                     <div class="col-lg-8 col-md-8 col-sm-8">
-                                        <input id="configsInput_MirrorAddress" class="form-control"/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr><th>Mirror Address</th><th>Actions</th></tr>
+                                            </thead>
+                                            <tbody id="configsInput_MirrorAddress"></tbody>
+                                        </table>
                                     </div>                                
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-lg-4 col-md-4 col-sm-4">Mirror Swarm Address: </label>
+                                    <label class="col-lg-4 col-md-4 col-sm-4">Mirror Swarm Addresses: </label>
                                     <div class="col-lg-8 col-md-8 col-sm-8">
-                                        <input id="configsInput_MirrorSwarmAddress" class="form-control"/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr><th>Mirror Swarm Address</th><th>Actions</th></tr>
+                                            </thead>
+                                            <tbody id="configsInput_MirrorSwarmAddress"></tbody>
+                                        </table>
                                     </div>                                
                                 </div>
                                 <div class="form-group">
@@ -1051,14 +1061,44 @@
 
             }
 
-            function returnGetConfigs(configs) {
+            function returnGetConfigs(configs, callback) {
 
                 configs = JSON.parse(configs);
 
+                var mirrors = "";
+                for (var i = 0; i < configs.mirrors.length; i++) {
+                    mirrors = mirrors+
+                        "<tr>"+
+                            "<td>"+configs.mirrors[i]+"</td>"+
+                            "<td><i class='fas fa-minus remove_mirrorAddress' style='cursor: pointer;'></i></td>"+
+                        "</tr>";
+                }
+                mirrors = mirrors + 
+                    "<tr>"+
+                        "<td><input id='configsInput_MirrorAddress_input' class='form-control'/></td>"+
+                        "<td><i class='fas fa-plus add_mirrorAddress'></i></td>"+
+                    "</tr>";
+
+                var mirrorsSwarms = "";
+                for (var i = 0; i < configs.mirrorsSwarms.length; i++) {
+                    mirrorsSwarms = mirrorsSwarms+
+                        "<tr>"+
+                            "<td>"+configs.mirrorsSwarms[i]+"</td>"+
+                            "<td><i class='fas fa-minus remove_mirrorSwarmAddress'></i></td>"+
+                        "</tr>";
+                }
+                mirrorsSwarms = mirrorsSwarms + 
+                    "<tr>"+
+                        "<td><input id='configsInput_MirrorSwarmAddress_input' class='form-control'/></td>"+
+                        "<td><i class='fas fa-plus add_mirrorSwarmAddress' style='cursor: pointer;'></i></td>"+
+                    "</tr>";
+
                 $("#configsInput_ServerAddress").val(configs.server);
                 $("#configsInput_LocalAPIAddress").val(configs.ipfsAPI);
-                $("#configsInput_MirrorAddress").val(configs.mirrors);
-                $("#configsInput_MirrorSwarmAddress").val(configs.mirrorsSwarms);
+
+                $("#configsInput_MirrorAddress").html(mirrors);
+                $("#configsInput_MirrorSwarmAddress").html(mirrorsSwarms);
+
                 $("#configsInput_RelaySwarmAddress").val(configs.relaysSwarms);
 
                 $("#configsInput_ServerAddress").off('change', null);
@@ -1066,15 +1106,74 @@
 
                 $("#configsInput_LocalAPIAddress").off('change', null);
                 $("#configsInput_LocalAPIAddress").on('change', updateConfigs);
+                
+                $(".add_mirrorAddress").off('click', null);
+                $(".add_mirrorAddress").on('click', function () {
 
-                $("#configsInput_MirrorAddress").off('change', null);
-                $("#configsInput_MirrorAddress").on('change', updateConfigs);
+                    var newMirrorAddress = $(this).parent().parent().find("td:first input").val();
+                    configs.mirrors.push(newMirrorAddress);
 
-                $("#configsInput_MirrorSwarmAddress").off('change', null);
-                $("#configsInput_MirrorSwarmAddress").on('change', updateConfigs);
+                    returnGetConfigs(JSON.stringify(configs), function () {
+                        updateConfigs();
+                    });
+
+                });
+
+                $(".add_mirrorSwarmAddress").off('click', null);
+                $(".add_mirrorSwarmAddress").on('click', function () {
+
+                    var newMirrorSwarmAddress = $(this).parent().parent().find("td:first input").val();
+                    configs.mirrorsSwarms.push(newMirrorSwarmAddress);
+
+                    returnGetConfigs(JSON.stringify(configs), function () {
+                        updateConfigs();
+                    });
+
+                });
+
+                $(".remove_mirrorAddress").off('click', null);
+                $(".remove_mirrorAddress").on('click', function () {
+
+                    // Remove the line to table
+                    var mirrorAddress2Remove = $(this).parent().parent().find("td:first").text();
+                    for (var i = 0; i < configs.mirrors.length; i++) {
+                        console.log("mirrorAddress2Remove: "+mirrorAddress2Remove+", configs.mirrors[i]: "+configs.mirrors[i]);
+                        if ( configs.mirrors[i] === mirrorAddress2Remove ) {
+                            configs.mirrors.splice(i, 1);
+                            break;
+                        }
+                    }
+
+                    returnGetConfigs(JSON.stringify(configs), function () {
+                        updateConfigs();
+                    });
+
+                });
+
+                $(".remove_mirrorSwarmAddress").off('click', null);
+                $(".remove_mirrorSwarmAddress").on('click', function () {
+
+                    // Remove the line to table
+                    var mirrorSwarmAddress2Remove = $(this).parent().parent().find("td:first").text();
+                    for (var i = 0; i < configs.mirrorsSwarms.length; i++) {
+                        if ( configs.mirrorsSwarms[i] === mirrorSwarmAddress2Remove ) {
+                            configs.mirrorsSwarms.splice(i, 1);
+                            break;
+                        }
+                    }
+
+                    returnGetConfigs(JSON.stringify(configs), function () {
+                        updateConfigs();
+                    });
+
+                });
 
                 $("#configsInput_RelaySwarmAddress").off('change', null);
                 $("#configsInput_RelaySwarmAddress").on('change', updateConfigs);
+
+                if ( typeof callback !== "undefined" ) {
+                    callback();
+                }
 
             }
 
@@ -1126,15 +1225,34 @@
 
             function updateConfigs() {
 
+                var mirrors = [];
+                $("#configsInput_MirrorAddress tr").each(function(){
+                    var text = $(this).find("td:first").text();
+                    if ( text !== "" ) {
+                        mirrors.push(text); //put elements into array
+                    }
+                });
+
+                var mirrorsSwarms = [];
+                $("#configsInput_MirrorSwarmAddress tr").each(function(){
+                    var text = $(this).find("td:first").text();
+                    if ( text !== "" ) {
+                        mirrorsSwarms.push(text); //put elements into array
+                    }
+                });
+
                 var configs_ = {
                     "server": $("#configsInput_ServerAddress").val(),
                     "ipfsAPI": $("#configsInput_LocalAPIAddress").val(),
-                    "mirrorsSwarms": $("#configsInput_MirrorSwarmAddress").val(),
-                    "mirrors": $("#configsInput_MirrorAddress").val(),
+                    "mirrorsSwarms": mirrorsSwarms,
+                    "mirrors": mirrors,
                     "relaysSwarms": $("#configsInput_RelaySwarmAddress").val()
                 };
+
+                console.log("configs_:");
+                console.log(configs_);
                 
-                ipcRenderer.send("setConfigs", JSON.stringify(configs_));
+                //ipcRenderer.send("setConfigs", JSON.stringify(configs_));
 
             }
 
