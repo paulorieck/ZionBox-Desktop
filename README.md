@@ -1,5 +1,7 @@
 # ZionBox-Desktop
 
+[![NPM](https://nodei.co/npm/zionbox-desktop.png)](https://nodei.co/npm/zionbox-desktop/)
+
 This is a secured and decentralized file system on the web! Keep your data secured from governments and big companies.
 
 ![alt text](https://www.gwtk.com.br/imagens_publicas/5d53fa6669775.jpg)
