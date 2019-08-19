@@ -30,7 +30,7 @@ ZionBox is a system based on the [IPFS](https://ipfs.io) technology. You can see
 - ZionBox will permit storing critical data and share it securely;
 - ZionBoX is a base technology that can be evolved in several different products;
 
-## Pre-requisites for the Desktop and Service modules
+## Pre-requisites for the Desktop module
 - node (For Windows current LTS version is required);
 - Python 2.7 (If installing from source code, necessary on Windows to build);
     - If you are not using windows install the necessary tools to build code from npm;
@@ -41,11 +41,9 @@ ZionBox is a system based on the [IPFS](https://ipfs.io) technology. You can see
     - [IPFS](https://ipfs.io) must be previously initialized with: npm init
 - electron (automatically installed through npm);
 - node-gyp (to build from source, automatically installed through npm);
-- npm (to initialize the ZionBox-Service automatically at boot, automatically installed through npm);
 
 ## The entire eco-system compreends the listed software:
 - ZionBox-Desktop (GUI Client, currently necessary for all installations, if you don't have a UI Server you cannot use ZionBox currently);
-- [ZionBox-Service](https://www.npmjs.com/package/zionbox-service) (necessary to run the Desktop GUI);
 - [ZionBox-Mirror](https://www.npmjs.com/package/zionbox-mirror) (OPTIONAL if you want resilience to your data. Manages data to be resilient on your sub-network);
 - [ZionBox-Server](https://www.npmjs.com/package/zionboxserver) (NECESSARY AT LEAST ONE SERVER FOR YOUR APPLICATION. Establish connections between the differed nodes on your ZionBox network);
 
