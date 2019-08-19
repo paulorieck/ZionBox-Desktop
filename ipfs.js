@@ -71,8 +71,7 @@ module.exports = {
 
                         } else if ( os.platform() === "win32" ) {
 
-                            let bin = __dirname+'\\ipfs-windows-startup.vbs';
-                            ipfsExec = child_process.exec(bin);
+                            ipfsExec = child_process.spawn('ipfs', ['daemon'], {'spawn': false});
 
                             ipfsExec.stdout.on('data', function (logs) {
                             

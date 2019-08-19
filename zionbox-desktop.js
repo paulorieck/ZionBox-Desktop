@@ -203,13 +203,13 @@ app.on('ready', function () {
 
             console.log("Updating ZionBox-Desktop");
 
-            npmAutoUpdate.updatePackage((error, result) => {
+            //npmAutoUpdate.updatePackage((error, result) => {
 
                 createWindow();
                 connectToIPCServer();
                 listenIPCMain();
 
-            });
+            //});
 
         } else {
 
