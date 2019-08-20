@@ -84,10 +84,10 @@ function createRoot(name, callback) {
         var encrypted = gpg.encryptString(passphrase, JSON.stringify(rootIPFSObj));
 
         var hashed_filename = generateHash({length: 5})+".gpg";
-        fs.writeFileSync(hashed_filename, encrypted);
+        fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
 
         // Stores the IPFS Object on the interplanetary space
-        ipfs.add(hashed_filename, function (location_hash) {
+        ipfs.add(path.join(homedir, hashed_filename), function (location_hash) {
 
             for (var i = 0; i < global.confs.mirrors.length; i++) {
                 axios.post("http://"+global.confs.mirrors[i]+"/synchronizeObject", {"hash": location_hash, "id": myHash}).then((data) => {
@@ -308,10 +308,10 @@ function createSubFolder(parent_metadata_hash, name, callback) {
     var encrypted = gpg.encryptString(passphrase, JSON.stringify(newIPFSObj));
 
     var hashed_filename = generateHash({length: 5})+".gpg";
-    fs.writeFileSync(hashed_filename, encrypted);
+    fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
 
     // Stores the IPFS Object on the interplanetary space
-    ipfs.add(hashed_filename, function (location_hash) {
+    ipfs.add(path.join(homedir, hashed_filename), function (location_hash) {
 
         for (var i = 0; i < global.confs.mirrors.length; i++) {
             axios.post("http://"+global.confs.mirrors[i]+"/synchronizeObject", {"hash": location_hash, "id": myHash}).then((data) => {
@@ -530,10 +530,11 @@ function remove(metadata_hash, callback) {
                 var encrypted = gpg.encryptString(new_passphrase, JSON.stringify(parent_obj));
 
                 var hashed_filename = generateHash({length: 5})+".gpg";
-                fs.writeFileSync(hashed_filename, encrypted);
+                
+                fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
 
                 // Saves the new subfolder
-                ipfs.add(hashed_filename, function (new_location_hash) {
+                ipfs.add(path.join(homedir, hashed_filename), function (new_location_hash) {
 
                     // Pin the new content
                     ipfs.pin(currentcredentials.username, new_location_hash);
@@ -565,10 +566,10 @@ function remove(metadata_hash, callback) {
             var encrypted = gpg.encryptString(new_passphrase, JSON.stringify(parent_obj));
 
             var hashed_filename = generateHash({length: 5})+".gpg";
-            fs.writeFileSync(hashed_filename, encrypted);
+            fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
 
             // Saves the new subfolder
-            ipfs.add(hashed_filename, function (new_location_hash) {
+            ipfs.add(path.join(homedir, hashed_filename), function (new_location_hash) {
 
                 for (var i = 0; i < global.confs.mirrors.length; i++) {
                     axios.post("http://"+global.confs.mirrors[i]+"/synchronizeObject", {"hash": new_location_hash, "id": myHash}).then((data) => {
@@ -626,10 +627,10 @@ function importPublicHash(hash, parent_location_hash, name, callback) {
     var encrypted = gpg.encryptString(passphrase, JSON.stringify(newIPFSObj));
 
     var hashed_filename = generateHash({length: 5})+".gpg";
-    fs.writeFileSync(hashed_filename, encrypted);
+    fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
 
     // Stores the IPFS Object on the interplanetary space
-    ipfs.add(hashed_filename, function (metadata_location_hash) {
+    ipfs.add(path.join(homedir, hashed_filename), function (metadata_location_hash) {
 
         synchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
             synchronizationDao.processSynchronizations(myHash, metadata);
@@ -730,10 +731,10 @@ function addFile(parent_location_hash, name, path, encrypt, old_versions, callba
                 var encrypted = gpg.encryptString(passphrase, JSON.stringify(newIPFSObj));
 
                 var hashed_filename = generateHash({length: 5})+".gpg";
-                fs.writeFileSync(hashed_filename, encrypted);
+                fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
 
                 // Stores the IPFS Object on the interplanetary space
-                ipfs.add(hashed_filename, function (metadata_location_hash) {
+                ipfs.add(path.join(homedir, hashed_filename), function (metadata_location_hash) {
 
                     for (var i = 0; i < global.confs.mirrors.length; i++) {
 
@@ -812,10 +813,10 @@ function addFile(parent_location_hash, name, path, encrypt, old_versions, callba
             var encrypted = gpg.encryptString(passphrase, JSON.stringify(newIPFSObj));
 
             var hashed_filename = generateHash({length: 5})+".gpg";
-            fs.writeFileSync(hashed_filename, encrypted);
+            fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
 
             // Stores the IPFS Object on the interplanetary space
-            ipfs.add(hashed_filename, function (metadata_location_hash) {
+            ipfs.add(path.join(homedir, hashed_filename), function (metadata_location_hash) {
 
                 for (var i = 0; i < global.confs.mirrors.length; i++) {
 
