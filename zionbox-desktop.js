@@ -1,5 +1,4 @@
 const {app, BrowserWindow, ipcMain, dialog, shell} = require('electron');
-const npmAutoUpdate = new (require('npm-auto-update'))(console);
 const notifier = require('node-notifier');
 const osLocale = require('os-locale');
 const fs = require('fs');
@@ -197,43 +196,9 @@ function listenIPCMain() {
 //app.on('ready', createWindow);
 app.on('ready', function () {
 
-    npmAutoUpdate.checkForUpdate((error, result) => {
-
-        if ( result ) {
-
-            console.log("Updating ZionBox-Desktop");
-
-            //npmAutoUpdate.updatePackage((error, result) => {
-
-                // Create the browser window.
-                var updateWin = new BrowserWindow({
-                    width: 600,
-                    height: 400,
-                    webPreferences: {
-                        nodeIntegration: true
-                    }
-                });
-
-                // and load the index.html of the app.
-                updateWin.loadFile('index.html');
-
-                createWindow();
-                connectToIPCServer();
-                listenIPCMain();
-
-            //});
-
-        } else {
-
-            console.log("ZionBox-Desktop is up to date");
-
-            createWindow();
-            connectToIPCServer();
-            listenIPCMain();
-
-        }
-
-    });
+    createWindow();
+    connectToIPCServer();
+    listenIPCMain();
 
 });
 
