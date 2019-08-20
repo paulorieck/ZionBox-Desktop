@@ -41,19 +41,17 @@ module.exports = {
 
                             var cwdPath = "";
                             if ( os.platform() === "darwin" ) {
+
                                 cwdPath = "/Users";
+
+                                const fixPath = require('fix-path');
+                                fixPath();
+
                             } else if ( os.platform() === "linux" ) {
                                 cwdPath = "~/";
                             }
 
-                            let bin = 'ipfs';
-                            let cliArgs = ["daemon"];
-                            let options = {
-                                spawn: false,
-                                cwd: cwdPath
-                            };
-
-                            ipfsExec = child_process.spawn(bin, cliArgs, options);
+                            ipfsExec = child_process.exec('ipfs daemon');
 
                             ipfsExec.stdout.on('data', function (logs) {
                             

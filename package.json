@@ -1,13 +1,12 @@
 {
   "name": "zionbox-desktop",
-  "version": "1.0.44",
+  "version": "1.0.45",
   "description": "DESKTOP Module - This is a secured and decentralized file system on the web!",
   "main": "zionbox-desktop.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron .",
-    "preinstall": "node preinstall.js",
-    "postinstall": "node postinstall.js"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "start": "electron ."
   },
   "author": "Grupo GWTK (www.gwtk.com.br)",
   "license": "MIT",
@@ -20,31 +19,16 @@
     "directory-tree": "^2.2.3",
     "file-extension": "^4.0.5",
     "find-process": "^1.4.2",
+    "fix-path": "^2.1.0",
     "ipfs-http-client": "^32.0.1",
-    "lodash": "^4.17.15",
-    "ncp": "^2.0.0",
     "nedb": "^1.8.0",
-    "node-args": "^2.1.8",
     "node-notifier": "^5.4.0",
     "node-watch": "^0.6.2",
     "npm-auto-update": "^1.1.3",
     "os-locale": "^4.0.0",
-    "platform-dependent-modules": "^0.0.14",
-    "prompt-password": "^1.2.0",
     "random-hash": "^4.0.1",
     "tough-cookie": "^3.0.1",
-    "try-to-catch": "^1.1.1",
     "ws": "^7.1.0"
-  },
-  "config": {
-    "platformDependentModules": {
-      "win32": [
-        "create-windows-shortcut@^0.0.2"
-      ],
-      "darwin": [
-        "ncp@^2.0.0"
-      ]
-    }
   },
   "bin": {
     "zionboxdesktop": "./startup.js"
@@ -60,11 +44,71 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/paulorieck/ZionBox-Service.git"
+    "url": "https://github.com/paulorieck/ZionBox-Desktop.git"
   },
   "os": [
     "darwin",
     "linux",
     "win32"
-  ]
+  ],
+  "devDependencies": {
+    "electron": "^6.0.2",
+    "electron-builder": "^21.2.0"
+  },
+  "build": {
+    "appId": "zionbox.desktop",
+    "mac": {
+      "category": "com.gwtk.zionbox",
+      "publish": ["github"]
+    },
+    "files": [
+      "**/*"
+    ],
+    "copyright": "©2019 GWTK LTDA",
+    "dmg": {
+      "icon": "build/icon.icns",
+      "iconSize": 128,
+      "contents": [
+        {
+          "x": 380,
+          "y": 240,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 122,
+          "y": 240,
+          "type": "file"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis-web",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "publisherName": "Grupo GWTK LTDA.",
+      "publish": ["github"]
+    },
+    "linux": {
+      "category": "Network;",
+      "packageCategory": "Network;",
+      "description": "ZionBox Desktop Client for Linux",
+      "target": [
+        "deb",
+        "zip",
+        "AppImage",
+        "snap",
+        "rpm"
+      ],
+      "maintainer": "Paulo André Rieck <paulo.rieck@gwtk.com.br>",
+      "publish": ["github"]
+    }
+  }
 }

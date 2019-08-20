@@ -31,7 +31,7 @@ function createWindow () {
 
     win.maximize();
 
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     // and load the index.html of the app.
     win.loadFile('index.html');
@@ -204,6 +204,18 @@ app.on('ready', function () {
             console.log("Updating ZionBox-Desktop");
 
             //npmAutoUpdate.updatePackage((error, result) => {
+
+                // Create the browser window.
+                var updateWin = new BrowserWindow({
+                    width: 600,
+                    height: 400,
+                    webPreferences: {
+                        nodeIntegration: true
+                    }
+                });
+
+                // and load the index.html of the app.
+                updateWin.loadFile('index.html');
 
                 createWindow();
                 connectToIPCServer();
