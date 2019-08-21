@@ -26,6 +26,8 @@ Our goal is to protect your privacy and your freedom.
 
 We are building a vault to store your data safely! You have the control of your data!
 
+![alt text](https://www.gwtk.com.br/imagens_publicas/screenshot_1.png)
+
 ## Donations
 Help us to develop and improve this software!
 
