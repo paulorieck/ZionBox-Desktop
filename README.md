@@ -60,7 +60,7 @@ ZionBox is a system based on the [IPFS](https://ipfs.io) technology. You can see
 Just downaload the latest vesrion for your system at [GitHub ZionBox Releases](https://github.com/paulorieck/ZionBox-Desktop/releases)
 - Attention! Auto updates are not working at the moment! We are at ALPHA stage. Error will occurr. We are realising new versions almost every day, please, update this software regularly.
 
-At your first access, you should access the "Settings" section and fill the inputs. You can contact us at contact@prodgectool.com.br and ask for a server solution or you can configure them. Everything is open sourced! Please see the Mirror and Server modules at the list bellow.
+At your first access, you should access the "Settings" section and fill the inputs. You can contact us at [contact@prodgectool.com.br](mailto:contact@prodgectool.com.br) and ask for a server solution or you can configure them. Everything is open sourced! Please see the Mirror and Server modules at the list bellow.
 
 ## The entire eco-system compreends the listed software:
 - ZionBox-Desktop (GUI Client, currently necessary for all installations, if you don't have a UI Server you cannot use ZionBox currently);
