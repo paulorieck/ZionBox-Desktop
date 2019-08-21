@@ -2,12 +2,12 @@
 
 const fs = require('fs');
 const os = require('os');
-const path = require('path');
+const path_module = require('path');
 
 var homedir = os.homedir();
 
 // Import configs 
-global.confs = JSON.parse(fs.readFileSync(path.join(homedir, ".zionbox-service/configs.json")));
+global.confs = JSON.parse(fs.readFileSync(path_module.join(homedir, ".zionbox-service/configs.json")));
 
 var gpg = require('./gpg');
 var ipfs = require('./ipfs');
@@ -84,10 +84,10 @@ function createRoot(name, callback) {
         var encrypted = gpg.encryptString(passphrase, JSON.stringify(rootIPFSObj));
 
         var hashed_filename = generateHash({length: 5})+".gpg";
-        fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
+        fs.writeFileSync(path_module.join(homedir, hashed_filename), encrypted);
 
         // Stores the IPFS Object on the interplanetary space
-        ipfs.add(path.join(homedir, hashed_filename), function (location_hash) {
+        ipfs.add(path_module.join(homedir, hashed_filename), function (location_hash) {
 
             for (var i = 0; i < global.confs.mirrors.length; i++) {
                 axios.post("http://"+global.confs.mirrors[i]+"/synchronizeObject", {"hash": location_hash, "id": myHash}).then((data) => {
@@ -308,10 +308,10 @@ function createSubFolder(parent_metadata_hash, name, callback) {
     var encrypted = gpg.encryptString(passphrase, JSON.stringify(newIPFSObj));
 
     var hashed_filename = generateHash({length: 5})+".gpg";
-    fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
+    fs.writeFileSync(path_module.join(homedir, hashed_filename), encrypted);
 
     // Stores the IPFS Object on the interplanetary space
-    ipfs.add(path.join(homedir, hashed_filename), function (location_hash) {
+    ipfs.add(path_module.join(homedir, hashed_filename), function (location_hash) {
 
         for (var i = 0; i < global.confs.mirrors.length; i++) {
             axios.post("http://"+global.confs.mirrors[i]+"/synchronizeObject", {"hash": location_hash, "id": myHash}).then((data) => {
@@ -531,10 +531,10 @@ function remove(metadata_hash, callback) {
 
                 var hashed_filename = generateHash({length: 5})+".gpg";
                 
-                fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
+                fs.writeFileSync(path_module.join(homedir, hashed_filename), encrypted);
 
                 // Saves the new subfolder
-                ipfs.add(path.join(homedir, hashed_filename), function (new_location_hash) {
+                ipfs.add(path_module.join(homedir, hashed_filename), function (new_location_hash) {
 
                     // Pin the new content
                     ipfs.pin(currentcredentials.username, new_location_hash);
@@ -566,10 +566,10 @@ function remove(metadata_hash, callback) {
             var encrypted = gpg.encryptString(new_passphrase, JSON.stringify(parent_obj));
 
             var hashed_filename = generateHash({length: 5})+".gpg";
-            fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
+            fs.writeFileSync(path_module.join(homedir, hashed_filename), encrypted);
 
             // Saves the new subfolder
-            ipfs.add(path.join(homedir, hashed_filename), function (new_location_hash) {
+            ipfs.add(path_module.join(homedir, hashed_filename), function (new_location_hash) {
 
                 for (var i = 0; i < global.confs.mirrors.length; i++) {
                     axios.post("http://"+global.confs.mirrors[i]+"/synchronizeObject", {"hash": new_location_hash, "id": myHash}).then((data) => {
@@ -627,10 +627,10 @@ function importPublicHash(hash, parent_location_hash, name, callback) {
     var encrypted = gpg.encryptString(passphrase, JSON.stringify(newIPFSObj));
 
     var hashed_filename = generateHash({length: 5})+".gpg";
-    fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
+    fs.writeFileSync(path_module.join(homedir, hashed_filename), encrypted);
 
     // Stores the IPFS Object on the interplanetary space
-    ipfs.add(path.join(homedir, hashed_filename), function (metadata_location_hash) {
+    ipfs.add(path_module.join(homedir, hashed_filename), function (metadata_location_hash) {
 
         synchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
             synchronizationDao.processSynchronizations(myHash, metadata);
@@ -681,6 +681,8 @@ function importPublicHash(hash, parent_location_hash, name, callback) {
 
 function addFile(parent_location_hash, name, path, encrypt, old_versions, callback) {
 
+    console.log("addFile ==> parent_location_hash: "+parent_location_hash+", name: "+name+", path: "+path);
+
     if ( encrypt ) {
 
         // Convert file on gpg file
@@ -689,7 +691,9 @@ function addFile(parent_location_hash, name, path, encrypt, old_versions, callba
             charset: pass_charset
         });
 
-        gpg.encryptFile(path, name+".enc", passphrase_, function () {
+        console.log();
+
+        gpg.encryptFile(path, name+".enc", passphrase_, function () { 
 
             // Save the file on IPFS
             ipfs.addFile(name+".enc", function (file_location_hash) {
@@ -731,10 +735,10 @@ function addFile(parent_location_hash, name, path, encrypt, old_versions, callba
                 var encrypted = gpg.encryptString(passphrase, JSON.stringify(newIPFSObj));
 
                 var hashed_filename = generateHash({length: 5})+".gpg";
-                fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
+                fs.writeFileSync(path_module.join(homedir, hashed_filename), encrypted);
 
                 // Stores the IPFS Object on the interplanetary space
-                ipfs.add(path.join(homedir, hashed_filename), function (metadata_location_hash) {
+                ipfs.add(path_module.join(homedir, hashed_filename), function (metadata_location_hash) {
 
                     for (var i = 0; i < global.confs.mirrors.length; i++) {
 
@@ -813,10 +817,10 @@ function addFile(parent_location_hash, name, path, encrypt, old_versions, callba
             var encrypted = gpg.encryptString(passphrase, JSON.stringify(newIPFSObj));
 
             var hashed_filename = generateHash({length: 5})+".gpg";
-            fs.writeFileSync(path.join(homedir, hashed_filename), encrypted);
+            fs.writeFileSync(path_module.join(homedir, hashed_filename), encrypted);
 
             // Stores the IPFS Object on the interplanetary space
-            ipfs.add(path.join(homedir, hashed_filename), function (metadata_location_hash) {
+            ipfs.add(path_module.join(homedir, hashed_filename), function (metadata_location_hash) {
 
                 for (var i = 0; i < global.confs.mirrors.length; i++) {
 
@@ -1112,24 +1116,24 @@ function processMetadata(callback) {
 function main() {
 
     // Remove temporary files from old sessions
-    fs.readdir(path.join(homedir, ".zionbox-service/temp_files"), (err, files) => {
+    fs.readdir(path_module.join(homedir, ".zionbox-service/temp_files"), (err, files) => {
 
         if (err) throw err;
       
         for (const file of files) {
-            fs.unlink(path.join(path.join(homedir, ".zionbox-service/temp_files"), file), err => {
+            fs.unlink(path_module.join(homedir, ".zionbox-service/temp_files", file), err => {
                 if (err) throw err;
             });
         }
 
     });
 
-    fs.readdir(path.join(homedir, ".zionbox-service/exported_files"), (err, files) => {
+    fs.readdir(path_module.join(homedir, ".zionbox-service/exported_files"), (err, files) => {
 
         if (err) throw err;
       
         for (const file of files) {
-            fs.unlink(path.join(path.join(homedir, ".zionbox-service/exported_files"), file), err => {
+            fs.unlink(path_module.join(homedir, ".zionbox-service/exported_files", file), err => {
                 if (err) throw err;
             });
         }
@@ -1237,7 +1241,7 @@ zionbox_service = module.exports = {
 
         ipfs.getFile(binary_hash, function (stream) {
 
-            var file_temp_path = path.join(homedir, ".zionbox-service/temp_files/"+metadata_obj.name);
+            var file_temp_path = path_module.join(homedir, ".zionbox-service/temp_files/"+metadata_obj.name);
             var writestream = fs.createWriteStream(file_temp_path+".enc");
 
             stream.pipe(writestream);
@@ -1465,7 +1469,7 @@ zionbox_service = module.exports = {
     addFile: function (path, metadata_hash, encrypt, callback) {
 
         var filename = path.replace(/^.*[\\\/]/, '')
-        addFile(metadata_hash, filename, encrypt, [], function () {
+        addFile(metadata_hash, filename, path, encrypt, [], function () {
             callback(metadata);
         });
 
@@ -1490,7 +1494,7 @@ zionbox_service = module.exports = {
     setConfigs: function (data) {
 
         confs = data;
-        fs.writeFileSync(path.join(homedir, ".zionbox-service/configs.json"), JSON.stringify(data));
+        fs.writeFileSync(path_module.join(homedir, ".zionbox-service/configs.json"), JSON.stringify(data));
 
     },
 
@@ -1508,7 +1512,7 @@ zionbox_service = module.exports = {
             delete rootObj.metadata_hash;
 
             var hashed_filename = metadata_obj.name+".ips";
-            var complete_path = path.join(homedir, ".zionbox-service/exported_files", hashed_filename);
+            var complete_path = path_module.join(homedir, ".zionbox-service/exported_files", hashed_filename);
 
             fs.writeFileSync(complete_path+".temp", JSON.stringify(rootObj));
             gpg.encryptFile(complete_path+".temp", complete_path, passphrase, function () {
@@ -1523,7 +1527,7 @@ zionbox_service = module.exports = {
 
         var file_name = path.basename(input).replace(".ips", ".json");
 
-        var output = path.join(homedir, ".zionbox-service/temp_files", file_name);
+        var output = path_module.join(homedir, ".zionbox-service/temp_files", file_name);
 
         gpg.decryptFile(input, output, passphrase, function () {
 

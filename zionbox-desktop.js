@@ -30,7 +30,7 @@ function createWindow () {
 
     win.maximize();
 
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
 
     // and load the index.html of the app.
     win.loadFile('index.html');
@@ -107,8 +107,8 @@ function listenIPCMain() {
     });
     
     ipcMain.on('createRootDirectory', (event, name) => {
-        zionbox_service.createRootDirectory(name, function () {
-
+        zionbox_service.createRootDirectory(name, function (metadata_) {
+            returnGetAllMetadata(metadata_);
         });
     });
     

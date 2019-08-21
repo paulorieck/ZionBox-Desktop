@@ -5,7 +5,9 @@ const path = require('path');
 const os = require('os');
 const find_process = require('find-process');
 
-var db_path = path.join(os.homedir(), ".zionbox-service", "nedbs", "pinned.db");
+var homedir = os.homedir();
+
+var db_path = path.join(homedir, ".zionbox-service", "nedbs", "pinned.db");
 
 const Datastore = require('nedb');
 const db = new Datastore({filename: db_path, autoload: true});
@@ -107,7 +109,7 @@ module.exports = {
 
     add: function (filepath, callback) {
 
-        let cont = fs.readFileSync(__dirname+"/"+filepath);
+        let cont = fs.readFileSync(filepath);
         cont = new Buffer(cont);
 
         ipfs.add(cont, function (err, result) {
@@ -115,7 +117,7 @@ module.exports = {
             if ( err ) {
                 console.log(err);
             } else {
-                fs.unlinkSync(__dirname+"/"+filepath);
+                fs.unlinkSync(filepath);
                 callback(result[0].hash);
             }
 
@@ -135,6 +137,7 @@ module.exports = {
             });
 
             setTimeout(function () {
+
                 if ( stats === null ) {
                     ipfs.addFromFs(filepath, {}, (err, result) => {
                         if ( err ) {
@@ -145,6 +148,7 @@ module.exports = {
                 } else {
                     callback(hash);
                 }
+
             }, 100);
 
         });
