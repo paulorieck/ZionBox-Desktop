@@ -13,7 +13,7 @@ THIS PROJECT IS NOT STORED ON NPM ANYMORE!!! IF YOU WANT TO ACCESS THE SOURCE CO
 - Do you want to store, send and receive documents anonymously across the internet?
 - Have you concerns about privacy?
 - Have you concerns about the centralization of data on huge data stores?
-- Are you comfortable storing and sending your data to and trough a company that stores all information about you to sell advertisements?
+- Are you comfortable storing and sending your data to and through a company that stores all information about you to sell advertisements?
 - Do you want to contribute to internet's decentralization?
 
 This is a secured and decentralized file system on the web! Keep your data secured from governments and big companies.
