@@ -964,6 +964,26 @@
                                     }
                                 });
 
+                            } else if ( key === 'edit' ) {
+
+                                vex.dialog.open({
+                                    message: 'Edit',
+                                    input: [
+                                        '<input name="name" type="text" placeholder="File Name" required />',
+                                    ].join(''),
+                                    buttons: [
+                                        $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                                        $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                                    ],
+                                    callback: function (data) {
+                                        if ( !data ) {
+                                            console.log('Cancelled')
+                                        } else {
+                                            ipcRenderer.send("editName", JSON.stringify({'metadata_hash': metadata_hash, 'name': data.name}));
+                                        }
+                                    }
+                                });
+
                             }
 
                         },
@@ -998,7 +1018,7 @@
                                         if ( !data ) {
                                             console.log('Cancelled')
                                         } else {
-                                            //ipcRenderer.send("editFileName", JSON.stringify({'metadata_hash': metadata_hash, 'name': data.name}));
+                                            ipcRenderer.send("editName", JSON.stringify({'metadata_hash': metadata_hash, 'name': data.name}));
                                         }
                                     }
                                 });

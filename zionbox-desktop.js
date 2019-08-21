@@ -191,6 +191,13 @@ function listenIPCMain() {
         zionbox_service.importShare(obj.file_path, obj.passphrase);
     });
 
+    ipcMain.on('editName', (event, obj) => {
+        obj = JSON.parse(obj);
+        zionbox_service.editName(obj.metadata_hash, obj.name, function (metadata_) {
+            returnGetAllMetadata(metadata_);
+        });
+    });
+
 }
 
 //app.on('ready', createWindow);

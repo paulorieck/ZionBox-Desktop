@@ -681,8 +681,6 @@ function importPublicHash(hash, parent_location_hash, name, callback) {
 
 function addFile(parent_location_hash, name, path, encrypt, old_versions, callback) {
 
-    console.log("addFile ==> parent_location_hash: "+parent_location_hash+", name: "+name+", path: "+path);
-
     if ( encrypt ) {
 
         // Convert file on gpg file
@@ -690,8 +688,6 @@ function addFile(parent_location_hash, name, path, encrypt, old_versions, callba
             length: 128,
             charset: pass_charset
         });
-
-        console.log();
 
         gpg.encryptFile(path, name+".enc", passphrase_, function () { 
 
@@ -1607,6 +1603,101 @@ zionbox_service = module.exports = {
             callback(isLoggedIn, currentcredentials.username);
 
         }
+
+    },
+
+    editName: function (metadata_hash, name, callback) {
+
+        var now = (new Date()).getTime();
+
+        var metadata_obj = JSON.parse(JSON.stringify(searchObjectOnMetadataStructure(metadata, metadata_hash)));
+
+        metadata_obj.name = name;
+        metadata_obj.time = now;
+        
+        metadata_obj.versions.push({"metadata_hash":metadata_hash, "time": (new Date()).getTime(), "passphrase": metadata_obj.passphrase});
+
+        if ( metadata_obj.type === "file" ) {
+            metadata_obj.modification_time = now;
+        }
+
+        var child = [];
+        for (var i = 0; i < metadata_obj.processed_child.length; i++) {
+            child.push({"metadata_hash": metadata_obj.processed_child[i].metadata_hash, "passphrase": metadata_obj.processed_child[i].passphrase});
+        }
+        metadata_obj.child = child;
+    
+        delete metadata_obj.processed_child;
+        delete metadata_obj.synchronized;
+        delete metadata_obj.to_synchronize;
+        delete metadata_obj.parent;
+
+        /////////////////////////////////////////
+
+        // Removes the old version of the object
+        remove(metadata_hash, function (new_parent_hash) {
+
+            metadata_obj.parent = now;
+
+            var passphrase = generateHash({
+                length: 128,
+                charset: pass_charset
+            });
+
+            // Cryptography this newly created object
+            var encrypted = gpg.encryptString(passphrase, JSON.stringify(metadata_obj));
+
+            var hashed_filename = generateHash({length: 5})+".gpg";
+            fs.writeFileSync(path_module.join(homedir, hashed_filename), encrypted);
+
+            // Stores the IPFS Object on the interplanetary space
+            ipfs.add(path_module.join(homedir, hashed_filename), function (metadata_location_hash) {
+
+                synchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
+                    synchronizationDao.processSynchronizations(myHash, metadata);
+                });
+
+                for (var i = 0; i < global.confs.mirrors.length; i++) {
+
+                    // Synchronize metadata
+                    axios.post("http://"+global.confs.mirrors[i]+"/synchronizeObject", {"hash": metadata_location_hash, "id": myHash}).then((data) => {
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+
+                    // Synchronize binary
+                    /*axios.post("http://"+global.confs.mirrors[i]+"/synchronizeObject", {"hash": hash, "id": myHash}).then((data) => {
+                    }).catch(function (error) {
+                        console.log(error);
+                    });*/
+
+                }
+
+                // Pin the new content
+                ipfs.pin(currentcredentials.username, metadata_location_hash);
+
+                processParentOnChange(metadata_location_hash, passphrase, new_parent_hash, new_parent_hash, function (new_parent_hash) {
+            
+                    listStructure([], function (metadata_) {
+
+                        metadata = metadata_;
+
+                        synchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
+                            synchronizationDao.processSynchronizations(myHash, metadata);
+                        });
+
+                        console.log(chalk.yellow("["+name+"]")+" Created new IPFS file with name '"+name+"' and location_hash: '"+metadata_location_hash+"' and the new parent hash is: "+new_parent_hash);
+                        //console.log("Time to create subfolder: "+(new Date().getTime()-now));
+                        
+                        callback(metadata);
+
+                    });
+
+                });
+
+            });
+
+        });
 
     }
 
