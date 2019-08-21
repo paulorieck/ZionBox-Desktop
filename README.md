@@ -1,23 +1,37 @@
 # ZionBox-Desktop
 
-[![NPM](https://nodei.co/npm/zionbox-desktop.png)](https://nodei.co/npm/zionbox-desktop/)
+THIS PROJECT IS NOT STORED ON NPM ANYMORE!!! IF YOU WANT TO ACCESS THE SOURCE CODE, YOU CAN FIND IT AT [GitHub](https://github.com/paulorieck/ZionBox-Desktop)
+
+- Do you need a place to safely store Crypto Wallets passwords, or any other kind of data?
+- Do you want to share content in a safe way?
+- Do you want to share your family photographs and at the same time keep them away from clouds surveillance?
+- Do you want a distributed media center data store?
+- Do you want to make your data resilient and safe at the same time?
+- Do you want that, even if someone has physical access to your machine, your data keeps secured inside a vault?
+- Do you own an organization and want a safer manner to store your data?
+- Do you need a place to store documents and don't want to store it in raw format in your disk?
+- Do you want to store, send and receive documents anonymously across the internet?
+- Have you concerns about privacy?
+- Have you concerns about the centralization of data on huge data stores?
+- Are you comfortable storing and sending your data to and trough a company that stores all information about you to sell advertisements?
+- Do you want to contribute to internet's decentralization?
 
 This is a secured and decentralized file system on the web! Keep your data secured from governments and big companies.
 
+We are building a decentralized storage to your files based on the [IPFS - Interplanetary File System](https://ipfs.io). You can choose what content you want to cryptography. You can choose what content you want to share, with or without cryptography.
+
+Our goal is to protect your privacy and your freedom.
+
 ![alt text](https://www.gwtk.com.br/imagens_publicas/5d53fa6669775.jpg)
 
-To install ZionBox, please do it globally with the following command:
-
-```
-npm i zionbox-desktop -g
-```
-
-Execute from command line using "zionboxdesktop" command.
+We are building a vault to store your data safely! You have the control of your data!
 
 ## Donations
 Help us to develop and improve this software!
 
 [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPL6U33XS9HYA)
+
+You're also welcome to help us to code this solution! Feel free to clone this repository!
 
 ## Release notes
 THIS IS AN INITIAL RELEASE. USE AT YOUR OWN RISK. WE DO NOT PROVIDE ANY KIND OF WARRANTY! You should understand how [IPFS](https://ipfs.io) works before start this adventure.
@@ -30,19 +44,21 @@ ZionBox is a system based on the [IPFS](https://ipfs.io) technology. You can see
 - You can see ZionBox as a vault that you can share space with your friends and organizations;
 - You can preview some kind of data from within ZionBox, ex.: movies, musics, etc;
 - ZionBox will permit storing critical data and share it securely;
-- ZionBoX is a base technology that can be evolved in several different products;
+- ZionBox is a base technology that can be evolved in several different products;
 
 ## Pre-requisites for the Desktop module
-- node (For Windows current LTS version is required);
-- Python 2.7 (If installing from source code, necessary on Windows to build);
-    - If you are not using windows install the necessary tools to build code from npm;
 - ipfs;
     - On Windows can be installed with [Chocolatey](https://www.chocolatey.org/);
     - On Mac can be installed with [Homebrew](https://brew.sh/);
     - On Linux, see your distro for a packaged version or build from source code;
-    - [IPFS](https://ipfs.io) must be previously initialized with: npm init
-- electron (automatically installed through npm);
-- node-gyp (to build from source, automatically installed through npm);
+    - [IPFS](https://ipfs.io) must be previously initialized with: 
+    '''
+    npm init
+    '''
+
+## Instalation
+Just downaload the latest vesrion for your system at [GitHub ZionBox Releases](https://github.com/paulorieck/ZionBox-Desktop/releases)
+- Attention! Auto updates are not working at the moment! We are at ALPHA stage. Error will occurr. We are realising new versions almost every day, please, update this software regularly.
 
 ## The entire eco-system compreends the listed software:
 - ZionBox-Desktop (GUI Client, currently necessary for all installations, if you don't have a UI Server you cannot use ZionBox currently);
