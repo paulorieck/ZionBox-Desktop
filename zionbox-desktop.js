@@ -52,8 +52,8 @@ function listenIPCMain() {
     
         dialog.showOpenDialog(null, options, (foldersPaths) => {
             if ( typeof foldersPaths !== "undefined" ) {
-                zionbox_service.importLocalFolders(foldersPaths, function (size, root_name) {
-                    notifyImportationSize(size, root_name);
+                zionbox_service.importLocalFolders(foldersPaths, function (metadata_) {
+                    returnGetAllMetadata(metadata_);
                 });
             }
         });
@@ -265,8 +265,8 @@ module.exports = {
         total_imported_size = 0;
     
         current_importation = {};
-        current_importation.size = messageObj.size;
-        current_importation.root_name = messageObj.root_name;
+        current_importation.size = size;
+        current_importation.root_name = root_name;
     
         var sizeStr = "";
         if ( current_importation.size > 1024*1024*1024 ) { // GB

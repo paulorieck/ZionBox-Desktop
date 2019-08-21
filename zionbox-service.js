@@ -1309,11 +1309,13 @@ zionbox_service = module.exports = {
 
     },
 
-    importLocalFolders: function (foldersPaths) {
+    importLocalFolders: function (foldersPaths, callback) {
 
         var encrypt = true;
         for (var i = 0; i < foldersPaths.length; i++) {
-            importStructure(foldersPaths[i], path.basename(foldersPaths[i]), encrypt, function () {});
+            importStructure(foldersPaths[i], path_module.basename(foldersPaths[i]), encrypt, function () {
+                callback(metadata);
+            });
         }
 
     },
