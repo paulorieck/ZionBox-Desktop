@@ -128,7 +128,7 @@
                             <span>Path: </span><span id='path_string'></span>
                         </div>
                         <hr>
-                        <div id="filesDiv" class="col-lg-12 col-md-12 col-sm-12 context-menu-folder" style="width: 100%; min-height: 250px; border-style: dashed; padding-bottom: 15px;"></div>
+                        <div id="filesDiv" class="col-lg-12 col-md-12 col-sm-12 filesDiv" style="width: 100%; min-height: 250px; border-style: dashed; padding-bottom: 15px;"></div>
                     </div>
                 </div>
 
@@ -580,7 +580,7 @@
                         var context_class = "";
                         if ( metadata_[i].subtype === 'root' ) {
                             context_class = 'context-menu-root';
-                        } else if ( metadata_[i].subtype === 'subdirectory' ) {
+                        } else if ( metadata_[i].subtype === 'subfolder' ) {
                             context_class = 'context-menu-folder';
                         }
 
@@ -759,7 +759,7 @@
 
                     });
 
-                    $('.context-menu-folder').contextMenu(false); // disable contextmenu
+                    $('.filesDiv').contextMenu(false); // disable contextmenu
 
                     $.contextMenu({
                         selector: '.context-menu-root', 
@@ -777,7 +777,17 @@
                         }
                     });
 
-                    $('.context-menu-root').contextMenu(true); // enable contextmenu
+                    try {
+                        $('.context-menu-folder').contextMenu(false); // disable contextmenu
+                    } catch (Error) {}
+                    
+                    try {
+                        $('.context-menu-root').contextMenu(true); // enable contextmenu
+                    } catch (Error) {}
+
+                    try {
+                        $('.filesDiv').contextMenu(false); // disable contextmenu
+                    } catch (Error) {}
                     
                 } else {
 
@@ -842,10 +852,10 @@
                     /////////////////////////////////
 
                     $.contextMenu({
-                        selector: '.context-menu-folder', 
+                        selector: '.filesDiv', 
                         callback: function(key, options) {
 
-                            var metadata_hash = $(this).attr("metadata_hash");
+                            var metadata_hash = selected_metadata_hash;
                             if ( key === 'addSubfolder' ) {
 
                                 vex.dialog.open({
@@ -869,9 +879,6 @@
                             } else if ( key === 'delete' ) {
 
                                 selected_metadata_hash = searchObjectOnMetadataStructure(metadata, metadata_hash).parent;
-                                console.log("[delete] selected_metadata_hash: "+selected_metadata_hash);
-
-                                console.log("Will remove "+metadata_hash);
                                 ipcRenderer.send("remove", metadata_hash);
 
                             } else if ( key === 'import_public_hash' ) {
@@ -902,7 +909,69 @@
                             "addSubfolder": {name: "Add Subfolder", icon: "fas fa-folder-plus"},
                             "edit": {name: "Edit Name", icon: "fas fa-edit"},
                             "delete": {name: "Delete", icon: "fas fa-minus-square"},
-                            "import_public_hash": {name: "Import Public Object", icon: "fas fa-file-import"},
+                            "import_public_hash": {name: "Import Public Object", icon: "fas fa-file-import"}
+                        }
+                    });
+                    
+                    $.contextMenu({
+                        selector: '.context-menu-folder', 
+                        callback: function(key, options) {
+
+                            var metadata_hash = $(this).attr("metadata_hash");
+                            if ( key === 'addSubfolder' ) {
+
+                                vex.dialog.open({
+                                    message: 'Enter the new directory name:',
+                                    input: [
+                                        '<input name="name" type="text" placeholder="Directory Name" required />'
+                                    ].join(''),
+                                    buttons: [
+                                        $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                                        $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                                    ],
+                                    callback: function (data) {
+                                        if (!data) {
+                                            console.log('Cancelled')
+                                        } else {
+                                            ipcRenderer.send("createSubdirectory", JSON.stringify({'name': data.name, 'metadata_hash': metadata_hash}));
+                                        }
+                                    }
+                                });
+
+                            } else if ( key === 'delete' ) {
+
+                                selected_metadata_hash = searchObjectOnMetadataStructure(metadata, metadata_hash).parent;
+                                ipcRenderer.send("remove", metadata_hash);
+
+                            } else if ( key === 'import_public_hash' ) {
+
+                                vex.dialog.open({
+                                    message: 'Enter the public hash to import:',
+                                    input: [
+                                        '<input name="hash" type="text" placeholder="IPFS Hash" required />',
+                                        '<input name="name" type="text" placeholder="Desired File Name" required />'
+                                    ].join(''),
+                                    buttons: [
+                                        $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                                        $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                                    ],
+                                    callback: function (data) {
+                                        if (!data) {
+                                            console.log('Cancelled')
+                                        } else {
+                                            ipcRenderer.send("importPublicHash", JSON.stringify({'hash': data.hash, 'parent_location_hash': selected_metadata_hash, 'name': data.name}));
+                                        }
+                                    }
+                                });
+
+                            }
+
+                        },
+                        items: {
+                            "addSubfolder": {name: "Add Subfolder", icon: "fas fa-folder-plus"},
+                            "edit": {name: "Edit Name", icon: "fas fa-edit"},
+                            "delete": {name: "Delete", icon: "fas fa-minus-square"},
+                            "import_public_hash": {name: "Import Public Object", icon: "fas fa-file-import"}
                         }
                     });
 
@@ -911,22 +980,52 @@
                         callback: function(key, options) {
                             
                             var metadata_hash = $(this).attr("metadata_hash");
+                            console.log("Selected "+metadata_hash);
                             if ( key === 'delete' ) {
-
-                                console.log("Will remove "+metadata_hash);
                                 ipcRenderer.send("remove", metadata_hash);
+                            } else if ( key === 'edit' ) {
 
+                                vex.dialog.open({
+                                    message: 'Edit',
+                                    input: [
+                                        '<input name="name" type="text" placeholder="File Name" required />',
+                                    ].join(''),
+                                    buttons: [
+                                        $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+                                        $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+                                    ],
+                                    callback: function (data) {
+                                        if ( !data ) {
+                                            console.log('Cancelled')
+                                        } else {
+                                            //ipcRenderer.send("editFileName", JSON.stringify({'metadata_hash': metadata_hash, 'name': data.name}));
+                                        }
+                                    }
+                                });
+
+                            } else if ( key === 'info' ) {
+                                //ipcRenderer("showFileInfo", metadata_hash);
                             }
 
                         },
                         items: {
                             "edit": {name: "Edit Name", icon: "fas fa-edit"},
-                            "delete": {name: "Delete", icon: "fas fa-minus-square"}
+                            "delete": {name: "Delete", icon: "fas fa-minus-square"},
+                            "information": {name: "Information", icon: "fas fa-info-circle"}
                         }
                     });
 
-                    $('.context-menu-folder').contextMenu(true); // enable contextmenu
-                    $('.context-menu-root').contextMenu(false);
+                    try {
+                        $('.context-menu-folder').contextMenu(true); // enable contextmenu
+                    } catch (Error) {}
+                    
+                    try {
+                        $('.context-menu-root').contextMenu(false); // disable contextmenu
+                    } catch (Error) {}
+
+                    try {
+                        $('.filesDiv').contextMenu(true); // enable contextmenu
+                    } catch (Error) {}
 
                 }
 

@@ -30,7 +30,7 @@ function createWindow () {
 
     win.maximize();
 
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
 
     // and load the index.html of the app.
     win.loadFile('index.html');
