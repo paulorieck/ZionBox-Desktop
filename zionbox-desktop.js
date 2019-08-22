@@ -1,8 +1,11 @@
 const {app, BrowserWindow, ipcMain, dialog, shell} = require('electron');
+const { autoUpdater } = require("electron-updater")
 const notifier = require('node-notifier');
 const osLocale = require('os-locale');
 const fs = require('fs');
 const path = require('path');
+
+autoUpdater.checkForUpdatesAndNotify();
 
 const {rword} = require('./rword/dist/rword');
 rword.load('small_pt-BR');
