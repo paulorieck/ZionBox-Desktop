@@ -4,8 +4,7 @@ const notifier = require('node-notifier');
 const osLocale = require('os-locale');
 const fs = require('fs');
 const path = require('path');
-
-autoUpdater.checkForUpdatesAndNotify();
+var argv = require('minimist')(process.argv.slice(2));
 
 const {rword} = require('./rword/dist/rword');
 rword.load('small_pt-BR');
@@ -26,15 +25,15 @@ function createWindow () {
     win = new BrowserWindow({
         width: 1200,
         height: 600,
-        webPreferences: {
-            nodeIntegration: true
-        }
+        webPreferences: {nodeIntegration: true}
     });
 
     win.maximize();
 
-    win.webContents.openDevTools();
-
+    if ( typeof argv.debug !== "undefined" && ( argv.debug === "true" || argv.debug === true ) ) {
+        win.webContents.openDevTools();
+    }
+    
     // and load the index.html of the app.
     win.loadFile('index.html');
 
@@ -205,6 +204,8 @@ function listenIPCMain() {
 
 //app.on('ready', createWindow);
 app.on('ready', function () {
+
+    autoUpdater.checkForUpdatesAndNotify();
 
     createWindow();
     connectToIPCServer();

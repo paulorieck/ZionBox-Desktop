@@ -6,9 +6,6 @@ const path_module = require('path');
 
 var homedir = os.homedir();
 
-// Import configs 
-global.confs = JSON.parse(fs.readFileSync(path_module.join(homedir, ".zionbox-service/configs.json")));
-
 var gpg = require('./gpg');
 var ipfs = require('./ipfs');
 
@@ -16,7 +13,6 @@ var rootsDao = require('./RootsDao');
 var credentialsDao = require('./CredentialsDao');
 var synchronizationDao = require('./SynchronizationDao');
 var additionalSwarmsDao = require('./AdditionalSwarmsDao');
-
 
 const chalk = require('chalk');
 const {generateHash} = require('random-hash');
@@ -29,6 +25,45 @@ const axios = require('axios');
 const axiosCookieJarSupport = require('axios-cookiejar-support').default;
 const {CookieJar} = require('tough-cookie');
 const jar = new CookieJar();
+
+function initialize() {
+
+    // Create folders that are necessary if they don't exists yet
+    var homedir = os.homedir();
+    if ( !fs.existsSync(path_module.join(homedir, ".zionbox-service")) ){
+
+        fs.mkdirSync(path_module.join(homedir, ".zionbox-service"));
+
+        if ( !fs.existsSync(path_module.join(homedir, ".zionbox-service/temp_files")) ) {
+            fs.mkdirSync(path_module.join(homedir, ".zionbox-service/temp_files"));
+        }
+
+        if ( !fs.existsSync(path_module.join(homedir, ".zionbox-service/exported_files")) ) {
+            fs.mkdirSync(path_module.join(homedir, ".zionbox-service/exported_files"));
+        }
+
+    } else {
+
+        if ( !fs.existsSync(path_module.join(homedir, ".zionbox-service/temp_files")) ) {
+            fs.mkdirSync(path_module.join(homedir, ".zionbox-service/temp_files"));
+        }
+
+        if ( !fs.existsSync(path_module.join(homedir, ".zionbox-service/exported_files")) ) {
+            fs.mkdirSync(path_module.join(homedir, ".zionbox-service/exported_files"));
+        }
+
+    }
+
+    // Creates the configs.json if not exists
+    if ( !fs.existsSync(path_module.join(homedir, ".zionbox-service", "configs.json")) ) {
+        fs.writeFileSync(path_module.join(homedir, ".zionbox-service", "configs.json"), JSON.stringify({"server":"", "ipfsAPI":"", "mirrorsSwarms":[], "mirrors":[], "relaysSwarms":""}));
+    }
+
+    // Import configs 
+    global.confs = JSON.parse(fs.readFileSync(path_module.join(homedir, ".zionbox-service/configs.json")));
+
+}
+initialize();
 
 var instance = axios.create({
     baseURL: 'http://'+global.confs.server,
@@ -169,10 +204,10 @@ function subprocessParentOnChange(new_passphrase, ipfs_parent_object, parent_met
     var encrypted = gpg.encryptString(new_passphrase, JSON.stringify(ipfs_parent_object));
 
     var hashed_filename = generateHash({length: 5})+".gpg";
-    fs.writeFileSync(hashed_filename, encrypted);
+    fs.writeFileSync(path_module.join(homedir, hashed_filename), encrypted);
 
     // Saves the new subfolder
-    ipfs.add(hashed_filename, function (new_location_hash) {
+    ipfs.add(path_module.join(homedir, hashed_filename), function (new_location_hash) {
 
         for (var i = 0; i < global.confs.mirrors.length; i++) {
             axios.post("http://"+global.confs.mirrors[i]+"/synchronizeObject", {"hash": new_location_hash, "id": myHash}).then((data) => {

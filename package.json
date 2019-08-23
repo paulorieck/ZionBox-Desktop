@@ -1,12 +1,14 @@
 {
   "name": "zionbox-desktop",
-  "tag": "v1.0.48",
-  "version": "1.0.48",
+  "tag": "v1.0.50",
+  "version": "1.0.50",
   "description": "DESKTOP Module - This is a secured and decentralized file system on the web!",
   "main": "zionbox-desktop.js",
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --mac --win --linux --publish=always",
+    "dist-mac": "electron-builder --mac --publish=always",
+    "dist-linux": "electron-builder --linux --publish=always",
+    "dist-win": "electron-builder --win --publish=always",
     "start": "electron ."
   },
   "author": "Grupo GWTK (www.gwtk.com.br)",
@@ -23,6 +25,7 @@
     "find-process": "^1.4.2",
     "fix-path": "^2.1.0",
     "ipfs-http-client": "^32.0.1",
+    "minimist": "^1.2.0",
     "nedb": "^1.8.0",
     "node-notifier": "^5.4.0",
     "node-watch": "^0.6.2",
@@ -59,7 +62,6 @@
     "electron-builder": "^21.2.0"
   },
   "build": {
-    "license": "LICENSE.txt",
     "appId": "com.zionbox.desktop",
     "mac": {
       "category": "public.app-category.utilities",
@@ -118,6 +120,16 @@
       "maintainer": "Paulo André Rieck <paulo.rieck@gwtk.com.br>",
       "publish": [
         "github"
+      ]
+    },
+    "deb": {
+      "depends": [
+        "ipfs"
+      ]
+    },
+    "rpm": {
+      "depends": [
+        "ipfs"
       ]
     }
   }
