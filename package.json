@@ -1,14 +1,13 @@
 {
   "name": "zionbox-desktop",
-  "tag": "v1.0.50",
-  "version": "1.0.50",
+  "tag": "v1.0.51",
+  "version": "1.0.51",
   "description": "DESKTOP Module - This is a secured and decentralized file system on the web!",
   "main": "zionbox-desktop.js",
   "scripts": {
     "pack": "electron-builder --dir",
-    "dist-mac": "electron-builder --mac --publish=always",
-    "dist-linux": "electron-builder --linux --publish=always",
-    "dist-win": "electron-builder --win --publish=always",
+    "dist-local": "electron-builder --publish=always",
+    "dist": "electron-builder-online --mac --win --linux --publish=always",
     "start": "electron ."
   },
   "author": "Grupo GWTK (www.gwtk.com.br)",
