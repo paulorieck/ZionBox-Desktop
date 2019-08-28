@@ -49,7 +49,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/paulorieck/ZionBox-Desktop.git"
+    "url": "https://github.com/paulorieck/zionbox-desktop.git"
   },
   "os": [
     "darwin",
