@@ -1,4 +1,4 @@
-const Datastore = require('nedb');
+const Datastore = require('./node_modules/nedb');
 
 const os = require('os');
 const path = require('path');

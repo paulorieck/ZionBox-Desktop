@@ -267,6 +267,20 @@ module.exports = {
         var readableStream = ipfs.catReadableStream(hash);
         return readableStream;
 
+    },
+
+    getFileStat: function (metadata_hash, callback) {
+
+        ipfs.object.stat(metadata_hash, {timeout: '10s'}, (err, stats) => {
+
+            if (err) {
+              throw err
+            } else {
+                callback(stats);
+            }
+            
+        });
+
     }
 
 }

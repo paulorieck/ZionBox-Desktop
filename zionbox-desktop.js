@@ -30,6 +30,8 @@ function createWindow () {
 
     win.maximize();
 
+    console.log(argv);
+
     if ( typeof argv.debug !== "undefined" && ( argv.debug === "true" || argv.debug === true ) ) {
         win.webContents.openDevTools();
     }
@@ -200,6 +202,12 @@ function listenIPCMain() {
         });
     });
 
+    ipcMain.on('getInformation', (event, metadata_hash) => {
+        zionbox_service.getInformation(metadata_hash, function (information) {
+            returnGetInformation(information);
+        });
+    });
+
 }
 
 //app.on('ready', createWindow);
@@ -337,6 +345,14 @@ module.exports = {
 
     openFile: function (path) {
         shell.openItem(path);
+    },
+
+    returnGetInformation: function (stats) {
+        win.webContents.executeJavaScript("returnGetInformation('"+JSON.stringify(stats)+"')");
+    },
+
+    updateDownloadProgress: function (name, total_size, downloaded) {
+        win.webContents.executeJavaScript("updateDownloadProgress('"+JSON.stringify({"name": name, "total_size": total_size, "downloaded": downloaded})+"')");
     }
 
 }

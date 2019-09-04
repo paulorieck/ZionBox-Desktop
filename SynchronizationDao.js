@@ -1,8 +1,10 @@
 const devnull = require('dev-null');
 const ipfs = require('./ipfs');
+const zionbox_desktop = require('./zionbox-desktop');
 
 const os = require('os');
 const path = require('path');
+const prettybytes = require('pretty-bytes');
 
 var db_syncronization = path.join(os.homedir(), ".zionbox-service", "nedbs", "syncronization.db");
 var db_to_synchronize = path.join(os.homedir(), ".zionbox-service", "nedbs", "to_synchronize.db");
@@ -11,60 +13,107 @@ const Datastore = require('nedb');
 const synchronization_db = new Datastore({filename: db_syncronization, autoload: true});
 const to_synchronize_db = new Datastore({filename: db_to_synchronize, autoload: true});
 
-function synchronizeListOfObjects(counter, list, id, callback) {
+var synchronization_counter = 0;
 
-    if ( typeof list[counter] !== "undefined" ) {
-        
-        synchronizeObject(list[counter], id, function () {
+function searchObjectOnMetadataStructure(metadata_, metadata_hash) {
 
-            counter++;
-    
-            if ( counter > list.length ) {
-                callback();
-            } else {
-                synchronizeListOfObjects(counter, list, id, function () {
-                    callback();
-                });
+    var metadata_temp = null;
+    for (var i = 0; i < metadata_.length; i++) {
+
+        if ( metadata_[i].metadata_hash === metadata_hash ) {
+            metadata_temp = metadata_[i];
+        }
+
+        if ( metadata_temp === null || typeof metadata_temp === "undefined" ) {
+
+            var processed_child = metadata_[i].processed_child;
+
+            if ( processed_child.length > 0 ) {
+
+                metadata_temp = searchObjectOnMetadataStructure(processed_child, metadata_hash);
+
+                if ( metadata_temp !== null && typeof metadata_temp !== "undefined" ) {
+                    return metadata_temp;
+                }
+
+            } else if ( metadata_temp !== null && typeof metadata_temp !== "undefined" ) {
+                return metadata_temp;
             }
-    
-        });
 
-    } else {
-
-        counter++;
-    
-        if ( counter > list.length ) {
-            callback();
         } else {
-            synchronizeListOfObjects(counter, list, id, function () {
-                callback();
-            });
+            return metadata_temp;
         }
 
     }
 
 }
 
-function synchronizeObject(hash, id, callback) {
+function synchronizeListOfObjects(counter, list, id, metadata_, callback) {
+
+    if ( typeof list[counter] !== "undefined" ) {
+
+        while ( synchronization_counter <= 3 ) {
+
+            // Syncronize object
+            synchronizeObject(list[counter], id, "", function () {
+
+                var object2Synchro = searchObjectOnMetadataStructure(metadata_, list[counter]);
+
+                // Synchronize binary
+                synchronizeObject(object2Synchro.binary_hash, id, object2Synchro.name, function () {
+
+                    counter++;
+                    synchronization_counter++;
+            
+                    if ( counter > list.length ) {
+                        callback();
+                    } else {
+                        synchronizeListOfObjects(counter, list, id, metadata_, function () {
+                            synchronization_counter--;
+                            callback();
+                        });
+                    }
+            
+                });
+
+            });
+
+        }
+
+    }
+
+}
+
+function synchronizeObject(hash, id, name, callback) {
 
     console.log("Synchronizing object: "+hash);
 
     // Cat content
     var readableStream = ipfs.synchronizeObject(hash);
+    ipfs.getFileStat(hash, function (stats) {
 
-    var downloaded = 0;
-    readableStream.on('data', function(chunk) {
-        downloaded += chunk.length;
-        console.log("concluded: "+downloaded+" bytes");
-    });
+        var total_size = stats.CumulativeSize;
 
-    readableStream.pipe(devnull());
+        var downloaded = 0;
+        readableStream.on('data', function(chunk) {
 
-    readableStream.on('end',function () {
-        
-        // Saves information on db
-        synchronizationDao.registerSynchronized(hash, id, function () {
-            callback();
+            downloaded += chunk.length;
+
+            if ( name !== "" ) {
+                zionbox_desktop.updateDownloadProgress(name, total_size, downloaded);
+            }
+            
+        });
+
+        readableStream.pipe(devnull());
+
+        readableStream.on('end',function () {
+            
+            // Saves information on db
+            synchronizationDao.registerSynchronized(hash, id, function () {
+                callback();
+            });
+
         });
 
     });
@@ -308,7 +357,7 @@ module.exports = synchronizationDao = {
                 }
 
                 // Now that we have a list of what to synchronize, starts the synchronization!
-                synchronizeListOfObjects(0, synchronization_pending_list, id, function () {
+                synchronizeListOfObjects(0, synchronization_pending_list, id, metadata, function () {
                     console.log("Synchronization succeeded!");
                 });
 

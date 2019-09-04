@@ -1734,6 +1734,45 @@ zionbox_service = module.exports = {
 
         });
 
+    },
+
+    getInformation: function (metadata_hash) {
+
+        var information = {};
+
+        var ipfs_object = searchObjectOnMetadataStructure(metadata, metadata_hash);
+
+        if ( ipfs_object.size ) {
+            information.size = ipfs_object.size;
+        } else {
+            ipfs.getFileStat(ipfs_object.binary_hash , function (stats) {
+                information.size = stats.CumulativeSize;
+            });
+        }
+
+        information.name = ipfs_object.name;
+
+        if ( ipfs_object.binary_hash ) {
+            information.binary_hash = ipfs_object.binary_hash;
+        }
+
+        if ( information.size ) {
+
+            zionbox_desktop.returnGetInformation(information);
+
+        } else {
+
+            var interval = setInterval(function () {
+
+                if ( information.size ) {
+                    zionbox_desktop.returnGetInformation(information);
+                    clearInterval(interval);
+                }
+
+            }, 100);
+
+        }
+
     }
 
 }
