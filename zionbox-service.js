@@ -11,7 +11,7 @@ var ipfs = require('./ipfs');
 
 var rootsDao = require('./RootsDao');
 var credentialsDao = require('./CredentialsDao');
-var synchronizationDao = require('./SynchronizationDao');
+var localSynchronizationDao = require('./LocalSynchronizationDao');
 var additionalSwarmsDao = require('./AdditionalSwarmsDao');
 
 const chalk = require('chalk');
@@ -412,7 +412,7 @@ function getMetadata(local, raw_metadata, to_synchronize, callback) {
         ipfs_metadata.passphrase = local.passphrase;
 
         // check to synchronize, compare synchronized wit to_synchronize, download everything that is signalized to synchronization
-        synchronizationDao.checkSynchronized(local.metadata_hash, myHash, function (docs_synchronized) {
+        localSynchronizationDao.checkSynchronized(local.metadata_hash, myHash, function (docs_synchronized) {
 
             if ( docs_synchronized.length > 0 ) {
                 ipfs_metadata.synchronized = true;
@@ -420,7 +420,7 @@ function getMetadata(local, raw_metadata, to_synchronize, callback) {
                 ipfs_metadata.synchronized = false;
             }
 
-            synchronizationDao.checkToSynchronize(local.metadata_hash, myHash, function (docs_to_synchronize) {
+            localSynchronizationDao.checkToSynchronize(local.metadata_hash, myHash, function (docs_to_synchronize) {
 
                 if ( docs_to_synchronize.length > 0 ) {
                     ipfs_metadata.to_synchronize = true;
@@ -470,7 +470,7 @@ function loop_listStructure(counter, local, raw_metadata, callback) {
     var to_synchronize = false;
     getMetadata(local[counter], raw_metadata, to_synchronize, function (newObj) {
 
-        valid_hash_list.push({"hash": newObj.metadata_hash});
+        // Checks if already exists on list
         raw_metadata.push(newObj);
 
         counter++;
@@ -667,8 +667,8 @@ function importPublicHash(hash, parent_location_hash, name, callback) {
     // Stores the IPFS Object on the interplanetary space
     ipfs.add(path_module.join(homedir, hashed_filename), function (metadata_location_hash) {
 
-        synchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
-            synchronizationDao.processSynchronizations(myHash, metadata);
+        localSynchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
+            localSynchronizationDao.processSynchronizations(myHash, metadata);
         });
 
         for (var i = 0; i < global.confs.mirrors.length; i++) {
@@ -697,8 +697,8 @@ function importPublicHash(hash, parent_location_hash, name, callback) {
 
                 metadata = metadata_;
 
-                synchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
-                    synchronizationDao.processSynchronizations(myHash, metadata);
+                localSynchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
+                    localSynchronizationDao.processSynchronizations(myHash, metadata);
                 });
 
                 console.log(chalk.yellow("["+name+"]")+" Created new IPFS file with name '"+name+"' and location_hash: '"+metadata_location_hash+"' and the new parent hash is: "+new_parent_hash);
@@ -1065,7 +1065,7 @@ function importStructure(dir_path, root_name, encrypt, callback) {
                 loop_importStructure(0, original_structure, root_location_hash, root_name, encrypt, function () {
 
                     zionbox_desktop.notifyImportationSize(root_name);
-                    synchronizationDao.processSynchronizations(myHash, metadata);
+                    localSynchronizationDao.processSynchronizations(myHash, metadata);
 
                     callback();
 
@@ -1090,7 +1090,7 @@ function processMetadata(callback) {
         metadata = metadata_;
         callback(metadata);
 
-        synchronizationDao.processSynchronizations(myHash, metadata);
+        localSynchronizationDao.processSynchronizations(myHash, metadata);
 
         console.log("Time to process metadata: "+((new Date()).getTime()-now)+" ms");
 
@@ -1688,8 +1688,8 @@ zionbox_service = module.exports = {
             // Stores the IPFS Object on the interplanetary space
             ipfs.add(path_module.join(homedir, hashed_filename), function (metadata_location_hash) {
 
-                synchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
-                    synchronizationDao.processSynchronizations(myHash, metadata);
+                localSynchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
+                    localSynchronizationDao.processSynchronizations(myHash, metadata);
                 });
 
                 for (var i = 0; i < global.confs.mirrors.length; i++) {
@@ -1717,8 +1717,8 @@ zionbox_service = module.exports = {
 
                         metadata = metadata_;
 
-                        synchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
-                            synchronizationDao.processSynchronizations(myHash, metadata);
+                        localSynchronizationDao.setToSynchronize(metadata_location_hash, myHash, function () {
+                            localSynchronizationDao.processSynchronizations(myHash, metadata);
                         });
 
                         console.log(chalk.yellow("["+name+"]")+" Created new IPFS file with name '"+name+"' and location_hash: '"+metadata_location_hash+"' and the new parent hash is: "+new_parent_hash);

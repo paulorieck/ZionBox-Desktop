@@ -86,7 +86,7 @@ function synchronizeListOfObjects(counter, list, id, metadata_, callback) {
 
 function synchronizeObject(hash, id, name, callback) {
 
-    console.log("Synchronizing object: "+hash);
+    console.log("Synchronizing locally object: "+hash);
 
     // Cat content
     var readableStream = ipfs.synchronizeObject(hash);
@@ -110,7 +110,7 @@ function synchronizeObject(hash, id, name, callback) {
         readableStream.on('end',function () {
             
             // Saves information on db
-            synchronizationDao.registerSynchronized(hash, id, function () {
+            localSynchronizationDao.registerSynchronized(hash, id, function () {
                 callback();
             });
 
@@ -189,7 +189,7 @@ function getSubs(metadata, child, complete_to_synchronize_list) {
 
 }
 
-module.exports = synchronizationDao = {
+module.exports = localSynchronizationDao = {
 
     registerSynchronized: function (hash, id, callback) {
 
@@ -290,18 +290,18 @@ module.exports = synchronizationDao = {
         var synchronization_pending_list = [];
 
         // Get all "to synchronize"
-        synchronizationDao.getAllToSyncronize(id, function (to_synchronize) {
+        localSynchronizationDao.getAllToSyncronize(id, function (to_synchronize) {
 
             var complete_to_synchronize_list = [];
             for (var i = 0; i < to_synchronize.length; i++) {
 
-                console.log("to_synchronize[i].hash:");
+                console.log("Locally to_synchronize[i].hash:");
                 console.log(to_synchronize[i].hash);
                 console.log("");
 
                 var to_synchronize_obj = searchObjectOnMetadataStructure(metadata, to_synchronize[i].hash);
 
-                console.log("to_synchronize_obj:");
+                console.log("Locally to_synchronize_obj:");
                 console.log(to_synchronize_obj);
                 console.log("");
 
@@ -310,8 +310,8 @@ module.exports = synchronizationDao = {
                     if ( to_synchronize_obj.metadata_hash !== to_synchronize[i].hash ) {
 
                         // Removes the original to synchronize from db and adds the updated one
-                        synchronizationDao.removeFromToSynchronize(to_synchronize[i].hash, id, function () {
-                            synchronizationDao.setToSynchronize(to_synchronize_obj.metadata_hash, id, function () {});
+                        localSynchronizationDao.removeFromToSynchronize(to_synchronize[i].hash, id, function () {
+                            localSynchronizationDao.setToSynchronize(to_synchronize_obj.metadata_hash, id, function () {});
                         });
     
                     }
@@ -338,7 +338,7 @@ module.exports = synchronizationDao = {
 
             }
 
-            synchronizationDao.getAllSynchronized(id, function (synchronized) {
+            localSynchronizationDao.getAllSynchronized(id, function (synchronized) {
 
                 for (var i = 0; i < complete_to_synchronize_list.length; i++) {
 
@@ -358,7 +358,7 @@ module.exports = synchronizationDao = {
 
                 // Now that we have a list of what to synchronize, starts the synchronization!
                 synchronizeListOfObjects(0, synchronization_pending_list, id, metadata, function () {
-                    console.log("Synchronization succeeded!");
+                    console.log("Local Synchronization succeeded!");
                 });
 
             });
