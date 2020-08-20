@@ -15,7 +15,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "axios-cookiejar-support": "^0.5.0",
-    "bcrypt": "3.0.4-napi",
+    "bcrypt": "5.0.0",
     "chalk": "^2.4.2",
     "dev-null": "^0.1.1",
     "directory-tree": "^2.2.3",
